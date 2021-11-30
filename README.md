@@ -1,17 +1,16 @@
-# js-toolkits [![NPM Version][npm-image]][npm-url] [![NPM Downloads][downloads-image]][downloads-url] [![size-image]][size-url]
+# zr-toolkits [![NPM Version][npm-image]][npm-url] [![NPM Downloads][downloads-image]][downloads-url] [![size-image]][size-url]
 
-[size-image]: https://badgen.net/bundlephobia/minzip/js-toolkits
-[size-url]: https://bundlephobia.com/result?p=js-toolkits
-[npm-image]: https://badgen.net/npm/v/js-toolkits
-[npm-url]: https://npmjs.org/package/js-toolkits
-[downloads-image]: https://badgen.net/npm/dt/js-toolkits
-[downloads-url]: https://npmjs.org/package/js-toolkits
-一个封装获取url参数，ajax方法，手机号、邮箱正则检测，sessionStorage、localStorage、cookie操作等常用方法的js工具库   
-相关介绍：[【总结】做一个自己的前端js工具库](https://juejin.im/post/5daebab45188250ec90be71b "js-toolkits")
+<!-- [size-image]: https://badgen.net/bundlephobia/minzip/js-toolkits -->
+<!-- [size-url]: https://bundlephobia.com/result?p=js-toolkits -->
+<!-- [npm-image]: https://badgen.net/npm/v/js-toolkits -->
+<!-- [npm-url]: https://npmjs.org/package/js-toolkits -->
+<!-- [downloads-image]: https://badgen.net/npm/dt/js-toolkits -->
+<!-- [downloads-url]: https://npmjs.org/package/js-toolkits -->
+
 ## 使用方式
 注：为简化操作，默认命名为"tks"
 
-```js
+<!-- ```js
 npm install --save js-toolkits
 ```
 
@@ -257,7 +256,7 @@ tks.ajax({
         console.log(status, options, xhr);
     }
 })
-```
+``` -->
 
 ## License
 
