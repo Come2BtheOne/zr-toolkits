@@ -1,10 +1,11 @@
 let path = require('path');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
+let pkg = require('../package.json');
 
 module.exports = {
     entry:'./src/index.ts',
     output: {
-        filename: 'zr-toolkits.min.js',
+        filename: `${pkg.name}.min.js`,
         path: path.resolve('dist'),
         library      : 'tks',
         // libraryTarget: 'umd',
