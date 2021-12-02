@@ -26,10 +26,19 @@
 	<h2>一个小巧而实用的js工具库</h2>
 	<section>
 		<code></code>
-
-    <button onclick='DL()'>下载</button>
+	<div id="box1" style="height: 200px; overflow: auto;">
+		<div style="height: 100px;width: 150vw;"></div>
+		<div style="height: 100px;width: 150vw;"></div>
+		<div style="height: 100px;width: 150vw;"></div>
+		<div style="height: 100px;width: 150vw;"></div>
+	</div>
+    <button id="btn" onclick='DL()'>获取滚动</button>
     <br>
     <span>将会复制这行</span><button onclick='cpoy()'>复制</button>
+	<br>
+	<button onclick="share()">分享</button>
+	<br>
+	<button onclick="callMe()">打电话</button>
 	</section>
 <body>
   <script type="text/javascript" src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -43,13 +52,33 @@
       console.log(tks.creatRandom(5))
       console.log(tks.trim(" sf s f ",3))
       console.log(tks.changeCase("sdd", 1))
+	  tks.watchVisibility(document.getElementById("btn"))
+
+	  var arr3 = [{name: 'a',id: 1}, {name: 'a',id: 2}, {name: 'b',id: 3}, {name: 'c',id: 4},
+ 		{name: 'c',id: 6}, {name: 'b',id: 6}, {name: 'd',id: 7},{name: 'd',id: 7,age:24},{name: 'e',id: 7,age:24}];
+		console.log(tks.deWeightThree(arr3, "id"));
+	  
     }
     const DL = () => {
-      tks.downloadByUrl("https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF")
+    //   tks.downloadByUrl("https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF")
+	  console.log(tks.getScrollPosition(document.getElementById("box1")));
     }
     const cpoy = () => {
       tks.copyToClipboard("将会复制这行")
     }
+
+	const share = async () => {
+		try{
+			await tks.share({title:"aaa",text: "dddd"})
+			console.log("成功");
+		}catch(err){
+			console.log(err);
+		}
+	}
+
+	const callMe = () => {
+		tks.phoneCall("110")
+	}
   </script>
 
 	<script>

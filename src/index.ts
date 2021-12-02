@@ -1,6 +1,26 @@
+/**
+ * @name:工具库
+ * @author: 切图仔
+ * @time: 2021-11-30 14:26:47
+ */
+
 import pkg from '../package.json';
-import { TimeDifference, CheckStringKey, TrimType, CaseType } from './types';
-import { CheckStringReg, TrimReg, aCity } from './config';
+import {
+  TimeDifference, 
+  CheckStringKey, 
+  TrimType, 
+  CaseType, 
+  ShareOptions,
+  NavigatorWithShare,
+  OperationEnum,
+  SendOptions
+} from './types';
+
+import { 
+  CheckStringReg, 
+  TrimReg, 
+  aCity 
+} from './config';
 
 export default class Tks {
 
@@ -38,6 +58,113 @@ export default class Tks {
       throw (`[${this.toolkitsName}.isEmptyObject()]\n入参非对象类型`);
     }
   }
+
+  /**
+   * 对数组对象去重
+   * @param {Array} arr   需要去重的数组
+   * @param {string} key  根据key值去重
+   * @returns {Array}
+   * 
+   * 示例：
+   * let Arr = [{name: 'a',id: 1}, {name: 'a',id: 2}, {name: 'b',id: 3}, {name: 'c',id: 4}]
+   * deWeightThree(Arr, "name");
+   */
+  public static deWeightThree<T>(arr: Array<T>, key: string): Array<T> {
+    let obj:T | {} = {};
+    let _arr:Array<T> = arr.reduce(function(a, b) {
+      obj[b[key]] ? '' : obj[b[key]] = true && a.push(b);
+      return a;
+    }, [])
+    return _arr;
+  }
+
+/**
+ * 递归查询树结构的某一个值
+ * @param {Array} arr   需要查找的数组
+ * @param {string} key  要查找的键名
+ * @param {any} keyValue 需要查找的值
+ * @param multilevelName  树结构内，包含子数组的对象名，默认children
+ * @returns {boolean} 是否找到
+ * 
+ * 示例：
+ * const Arr = [
+ *  {
+ *    id: 123,
+ *    children: [
+ *      id: 789,
+ *      children: []
+ *    ]
+ *  },
+ *  {
+ *    id: 456,
+ *    children: [
+ *      id: 874,
+ *      children: []
+ *    ]
+ *  },
+ * ]
+ * 
+ * searchRoutes(Arr, "id", 789, "children")
+ */
+  public static searchRoutes(arr: Array<any>, key: string, keyValue: any, multilevelName: string = 'children'): boolean {
+    for(let o of arr || []) {
+      if(o[key] === keyValue) return o
+      const o_ = this.searchRoutes(o[multilevelName] || [], key, keyValue, multilevelName)
+      if(o_) return o_
+    }
+  }
+
+
+/**
+ * 基于URL生成UUID
+ * @returns {string} cd205467-0120-47b0-9444-894736d873c7
+ */
+  public static genUUID(): string {
+    const url = URL.createObjectURL(new Blob([]));
+    // const uuid = url.split("/").pop();
+    const uuid = url.substring(url.lastIndexOf('/')+ 1);
+    URL.revokeObjectURL(url);
+    return uuid;
+  }
+
+  /**
+   * 基于日期对象和random生成随机ID
+   * @returns {string}  1627635706897_652
+   */
+  public static genRandomID(): string {
+    return new Date().getTime() + '_' + (Math.random() * 10000).toFixed(0);
+  }
+
+    /**
+   * 洗牌算法随机
+   * @param arr
+   */
+     public static shuffleRandom<T>(arr: Array<T>): Array<T> {
+      let result: Array<any> = [], random;
+      while (arr.length > 0) {
+        random = Math.floor(Math.random() * arr.length);
+        result.push(arr[random])
+        arr.splice(random, 1)
+      }
+      return result;
+    }
+  
+    /**
+     * 在一个范围内生成随机数
+     * @param {number} min
+     * @param {number} max
+     * @param {number} exact  精确到几位小数
+     */
+    public static creatRandom (min: number, max: number, exact: number = 0): number {
+      if (arguments.length === 0) {
+        return Math.random();
+      } else if (arguments.length === 1) {
+        max = min;
+        min = 0;
+      }
+      const range = min + (Math.random()*(max - min));
+      return +(exact === void(0) ? Math.round(range) : range.toFixed(exact));
+    }
 
 
   /**
@@ -456,33 +583,180 @@ export default class Tks {
   }
 
   /**
-   * 洗牌算法随机
-   * @param arr
+   * 获取当前元素的滚动条滚动位置
+   * @param el  元素 
+   * @returns {{x: number, y: number}}  x,y轴滚动位置
    */
-  public static shuffleRandom(arr) {
-    let result: Array<any> = [], random;
-    while (arr.length > 0) {
-      random = Math.floor(Math.random() * arr.length);
-      result.push(arr[random])
-      arr.splice(random, 1)
+  public static getScrollPosition(el: any = window): {x: number, y: number} {
+    return {
+      x: el.pageXOffset !== undefined ? el.pageXOffset : el.scrollLeft,
+      y: el.pageYOffset !== undefined ? el.pageYOffset : el.scrollTop
     }
-    return result;
+  };
+  
+
+  /**
+   * 监听用户是否离开当前窗口（切换后台）
+   * @param {()=> void} onHide  //隐藏
+   * @param {()=> void} onShow  //显示
+   */
+  public static watchVisibility(onHide?:()=> void, onShow?:()=> void) {
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        onHide && onHide()
+      } else {
+        onShow && onShow()
+      }
+    })
+    window.onbeforeunload = () => {
+      document.removeEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          onHide && onHide()
+        } else {
+          onShow && onShow()
+        }
+      })
+    }
+  }
+
+
+  /**
+   *  禁止右键、选择、复制
+   */
+  public static disableWindowEvent() {
+    ['contextmenu', 'selectstart', 'copy'].forEach(function (ev): void {
+      document.addEventListener(ev, function (event) {
+        return (event.returnValue = false)
+      })
+    })
   }
 
   /**
-   * 在一个范围内生成随机数
-   * @param {number} min
-   * @param {number} max
-   * @param {number} exact  精确到几位小数
+   * 唤起系统打电话功能
+   * @param {string} receiver 打给谁
    */
-  public static creatRandom (min: number, max: number, exact: number = 0): number {
-    if (arguments.length === 0) {
-      return Math.random();
-    } else if (arguments.length === 1) {
-      max = min;
-      min = 0;
+  public static phoneCall(receiver: string) {
+    console.log('@系统电话：', receiver);
+    this.send({operation: OperationEnum.tel, receiver})
+  }
+
+  /**
+   * 唤起系统短信功能
+   * @param {string} receiver 发给谁
+   */
+  public static sendMessage(receiver: string) {
+    console.log('@系统短信：', receiver);
+    this.send({operation: OperationEnum.sms, receiver})
+  }
+
+  /**
+   * 唤起系统发邮件功能
+   * @param {string} receiver 发给谁
+   */
+  public static sendEmail(receiver: string) {
+    console.log('@系统邮件：', receiver);
+    this.send({operation: OperationEnum.mailto, receiver})
+  }
+  public static send (options: SendOptions) {
+    let aTag = document.createElement('a');
+    aTag.href = `${options.operation}:${options.receiver}`;
+    document.body.appendChild(aTag);
+    aTag.click();
+    document.body.removeChild(aTag);
+  }
+
+
+  /**
+   * 调用系统分享
+   * @param {ShareOptions} shareOptions 分享参数
+   * @returns {Promise}
+   */
+  public static share(shareOptions: ShareOptions = {}):Promise<any> {
+    const _navigator = (window.navigator as NavigatorWithShare);
+    const isSupported = _navigator && 'canShare' in _navigator;
+  
+    if(isSupported) {
+      let granted = true;
+      if (shareOptions.files && _navigator.canShare) {
+        granted = _navigator.canShare({ files: shareOptions.files })
+      }
+      if (granted) {
+        return _navigator.share!(shareOptions)
+      }
+    } else {
+      console.warn("平台不支持系统分享功能");
+      return Promise.reject("平台不支持系统分享功能");
     }
-    const range = min + (Math.random()*(max - min));
-    return +(exact === void(0) ? Math.round(range) : range.toFixed(exact));
+  }
+
+
+/**
+ * 带图带事件的桌面通知。
+ * 参数参考  https://developer.mozilla.org/zh-CN/docs/Web/API/notification
+ * @param title 
+ * @param options 
+ * @param events 
+ * @returns 
+ */
+  public static notify(title: string, options: NotificationOptions = {}, events?: NotificationEventMap) {
+    if (!("Notification" in window)) {
+      return console.error("This browser does not support desktop notification");
+    }
+    else if (Notification.permission === "granted") {
+      this.doNotify(title, options, events);
+    } 
+    else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(function (permission) {           
+        if (permission === "granted") {
+          this.doNotify(title, options, events);
+        }
+      });
+    }
+  }
+  public static doNotify(title: string, options: NotificationOptions = {}, events?: NotificationEventMap) {
+    const notification = new Notification(title, options);
+    if(events) {
+      for (let event in events) {
+        notification[event] = events[event];
+      }
+    }
+  }
+
+  /**
+   * 视频截图
+   * @param {HTMLVideoElement} videoEl 传入video元素
+   * @returns 
+   */
+  public static captureVideo(videoEl: HTMLVideoElement) {
+    let canvasEl;
+    let dataUrl;
+    try {
+      const cps = window.getComputedStyle(videoEl);
+      const width = +cps.getPropertyValue("width").replace("px", "");
+      const height = +cps.getPropertyValue("height").replace("px", "");
+
+      canvasEl = document.createElement("canvas");
+      canvasEl.style.cssText = `position:fixed;left:-9999px`;
+      canvasEl.height = height;
+      canvasEl.width = width;
+
+      document.body.appendChild(canvasEl);
+      
+      const ctx = canvasEl.getContext("2d");
+      ctx.drawImage(videoEl, 0, 0, width, height);
+      // const image = canvas.toDataURL("image/png");
+      dataUrl = canvasEl.toDataURL();
+
+      document.body.removeChild(canvasEl);
+      canvasEl = null;
+      return dataUrl;
+    } finally {
+      if (canvasEl) {
+          document.body.removeChild(canvasEl);
+      }
+      if (dataUrl) {
+          return dataUrl;
+      }
+    }
   }
 }

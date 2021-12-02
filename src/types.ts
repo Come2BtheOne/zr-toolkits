@@ -39,3 +39,26 @@ export enum CaseType {
   allUpper, //全部大写
   allLower  //全部小写
 }
+
+export interface ShareOptions {
+  url?: string
+  title?: string
+  text?: string
+  files?: File[]
+}
+
+export interface NavigatorWithShare {
+  share?: (data: ShareOptions) => Promise<void>
+  canShare?: (data: ShareOptions) => boolean
+}
+
+export enum OperationEnum {
+  tel = "tel",
+  sms = "sms",
+  mailto = "mailto"
+}
+
+export interface SendOptions {
+  operation: OperationEnum
+  receiver: string
+}

@@ -98,6 +98,12 @@ var CaseType;
     CaseType[CaseType["allUpper"] = 4] = "allUpper";
     CaseType[CaseType["allLower"] = 5] = "allLower"; //全部小写
 })(CaseType || (CaseType = {}));
+var OperationEnum;
+(function (OperationEnum) {
+    OperationEnum["tel"] = "tel";
+    OperationEnum["sms"] = "sms";
+    OperationEnum["mailto"] = "mailto";
+})(OperationEnum || (OperationEnum = {}));
 
 var CheckStringReg = {
     phone: /^1[3|4|5|6|7|8|9][0-9]{9}$/,
@@ -127,6 +133,11 @@ var aCity = {
     11: "北京", 12: "天津", 13: "河北", 14: "山西", 15: "内蒙古", 21: "辽宁", 22: "吉林", 23: "黑龙江", 31: "上海", 32: "江苏", 33: "浙江", 34: "安徽", 35: "福建", 36: "江西", 37: "山东", 41: "河南", 42: "湖北", 43: "湖南", 44: "广东", 45: "广西", 46: "海南", 50: "重庆", 51: "四川", 52: "贵州", 53: "云南", 54: "西藏", 61: "陕西", 62: "甘肃", 63: "青海", 64: "宁夏", 65: "新疆", 71: "台湾", 81: "香港", 82: "澳门", 91: "国外"
 };
 
+/**
+ * @name:工具库
+ * @author: 切图仔
+ * @time: 2021-11-30 14:26:47
+ */
 var Tks = /** @class */ (function () {
     function Tks() {
     }
@@ -158,6 +169,112 @@ var Tks = /** @class */ (function () {
         else {
             throw ("[".concat(this.toolkitsName, ".isEmptyObject()]\n\u5165\u53C2\u975E\u5BF9\u8C61\u7C7B\u578B"));
         }
+    };
+    /**
+     * 对数组对象去重
+     * @param {Array} arr   需要去重的数组
+     * @param {string} key  根据key值去重
+     * @returns {Array}
+     *
+     * 示例：
+     * let Arr = [{name: 'a',id: 1}, {name: 'a',id: 2}, {name: 'b',id: 3}, {name: 'c',id: 4}]
+     * deWeightThree(Arr, "name");
+     */
+    Tks.deWeightThree = function (arr, key) {
+        var obj = {};
+        var _arr = arr.reduce(function (a, b) {
+            obj[b[key]] ? '' : obj[b[key]] =  a.push(b);
+            return a;
+        }, []);
+        return _arr;
+    };
+    /**
+     * 递归查询树结构的某一个值
+     * @param {Array} arr   需要查找的数组
+     * @param {string} key  要查找的键名
+     * @param {any} keyValue 需要查找的值
+     * @param multilevelName  树结构内，包含子数组的对象名，默认children
+     * @returns {boolean} 是否找到
+     *
+     * 示例：
+     * const Arr = [
+     *  {
+     *    id: 123,
+     *    children: [
+     *      id: 789,
+     *      children: []
+     *    ]
+     *  },
+     *  {
+     *    id: 456,
+     *    children: [
+     *      id: 874,
+     *      children: []
+     *    ]
+     *  },
+     * ]
+     *
+     * searchRoutes(Arr, "id", 789, "children")
+     */
+    Tks.searchRoutes = function (arr, key, keyValue, multilevelName) {
+        if (multilevelName === void 0) { multilevelName = 'children'; }
+        for (var _i = 0, _a = arr || []; _i < _a.length; _i++) {
+            var o = _a[_i];
+            if (o[key] === keyValue)
+                return o;
+            var o_ = this.searchRoutes(o[multilevelName] || [], key, keyValue, multilevelName);
+            if (o_)
+                return o_;
+        }
+    };
+    /**
+     * 基于URL生成UUID
+     * @returns {string} cd205467-0120-47b0-9444-894736d873c7
+     */
+    Tks.genUUID = function () {
+        var url = URL.createObjectURL(new Blob([]));
+        // const uuid = url.split("/").pop();
+        var uuid = url.substring(url.lastIndexOf('/') + 1);
+        URL.revokeObjectURL(url);
+        return uuid;
+    };
+    /**
+     * 基于日期对象和random生成随机ID
+     * @returns {string}  1627635706897_652
+     */
+    Tks.genRandomID = function () {
+        return new Date().getTime() + '_' + (Math.random() * 10000).toFixed(0);
+    };
+    /**
+   * 洗牌算法随机
+   * @param arr
+   */
+    Tks.shuffleRandom = function (arr) {
+        var result = [], random;
+        while (arr.length > 0) {
+            random = Math.floor(Math.random() * arr.length);
+            result.push(arr[random]);
+            arr.splice(random, 1);
+        }
+        return result;
+    };
+    /**
+     * 在一个范围内生成随机数
+     * @param {number} min
+     * @param {number} max
+     * @param {number} exact  精确到几位小数
+     */
+    Tks.creatRandom = function (min, max, exact) {
+        if (exact === void 0) { exact = 0; }
+        if (arguments.length === 0) {
+            return Math.random();
+        }
+        else if (arguments.length === 1) {
+            max = min;
+            min = 0;
+        }
+        var range = min + (Math.random() * (max - min));
+        return +(exact === void (0) ? Math.round(range) : range.toFixed(exact));
     };
     /**
      * 获取url上的参数
@@ -589,35 +706,172 @@ var Tks = /** @class */ (function () {
         return reg.test(el.className);
     };
     /**
-     * 洗牌算法随机
-     * @param arr
+     * 获取当前元素的滚动条滚动位置
+     * @param el  元素
+     * @returns {{x: number, y: number}}  x,y轴滚动位置
      */
-    Tks.shuffleRandom = function (arr) {
-        var result = [], random;
-        while (arr.length > 0) {
-            random = Math.floor(Math.random() * arr.length);
-            result.push(arr[random]);
-            arr.splice(random, 1);
-        }
-        return result;
+    Tks.getScrollPosition = function (el) {
+        if (el === void 0) { el = window; }
+        return {
+            x: el.pageXOffset !== undefined ? el.pageXOffset : el.scrollLeft,
+            y: el.pageYOffset !== undefined ? el.pageYOffset : el.scrollTop
+        };
     };
     /**
-     * 在一个范围内生成随机数
-     * @param {number} min
-     * @param {number} max
-     * @param {number} exact  精确到几位小数
+     * 监听用户是否离开当前窗口（切换后台）
+     * @param {()=> void} onHide  //隐藏
+     * @param {()=> void} onShow  //显示
      */
-    Tks.creatRandom = function (min, max, exact) {
-        if (exact === void 0) { exact = 0; }
-        if (arguments.length === 0) {
-            return Math.random();
+    Tks.watchVisibility = function (onHide, onShow) {
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                onHide && onHide();
+            }
+            else {
+                onShow && onShow();
+            }
+        });
+        window.onbeforeunload = function () {
+            document.removeEventListener("visibilitychange", function () {
+                if (document.hidden) {
+                    onHide && onHide();
+                }
+                else {
+                    onShow && onShow();
+                }
+            });
+        };
+    };
+    /**
+     *  禁止右键、选择、复制
+     */
+    Tks.disableWindowEvent = function () {
+        ['contextmenu', 'selectstart', 'copy'].forEach(function (ev) {
+            document.addEventListener(ev, function (event) {
+                return (event.returnValue = false);
+            });
+        });
+    };
+    /**
+     * 唤起系统打电话功能
+     * @param {string} receiver 打给谁
+     */
+    Tks.phoneCall = function (receiver) {
+        console.log('@系统电话：', receiver);
+        this.send({ operation: OperationEnum.tel, receiver: receiver });
+    };
+    /**
+     * 唤起系统短信功能
+     * @param {string} receiver 发给谁
+     */
+    Tks.sendMessage = function (receiver) {
+        console.log('@系统短信：', receiver);
+        this.send({ operation: OperationEnum.sms, receiver: receiver });
+    };
+    /**
+     * 唤起系统发邮件功能
+     * @param {string} receiver 发给谁
+     */
+    Tks.sendEmail = function (receiver) {
+        console.log('@系统邮件：', receiver);
+        this.send({ operation: OperationEnum.mailto, receiver: receiver });
+    };
+    Tks.send = function (options) {
+        var aTag = document.createElement('a');
+        aTag.href = "".concat(options.operation, ":").concat(options.receiver);
+        document.body.appendChild(aTag);
+        aTag.click();
+        document.body.removeChild(aTag);
+    };
+    /**
+     * 调用系统分享
+     * @param {ShareOptions} shareOptions 分享参数
+     * @returns {Promise}
+     */
+    Tks.share = function (shareOptions) {
+        if (shareOptions === void 0) { shareOptions = {}; }
+        var _navigator = window.navigator;
+        var isSupported = _navigator && 'canShare' in _navigator;
+        if (isSupported) {
+            var granted = true;
+            if (shareOptions.files && _navigator.canShare) {
+                granted = _navigator.canShare({ files: shareOptions.files });
+            }
+            if (granted) {
+                return _navigator.share(shareOptions);
+            }
         }
-        else if (arguments.length === 1) {
-            max = min;
-            min = 0;
+        else {
+            console.warn("平台不支持系统分享功能");
+            return Promise.reject("平台不支持系统分享功能");
         }
-        var range = min + (Math.random() * (max - min));
-        return +(exact === void (0) ? Math.round(range) : range.toFixed(exact));
+    };
+    /**
+     * 带图带事件的桌面通知。
+     * 参数参考  https://developer.mozilla.org/zh-CN/docs/Web/API/notification
+     * @param title
+     * @param options
+     * @param events
+     * @returns
+     */
+    Tks.notify = function (title, options, events) {
+        if (options === void 0) { options = {}; }
+        if (!("Notification" in window)) {
+            return console.error("This browser does not support desktop notification");
+        }
+        else if (Notification.permission === "granted") {
+            this.doNotify(title, options, events);
+        }
+        else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(function (permission) {
+                if (permission === "granted") {
+                    this.doNotify(title, options, events);
+                }
+            });
+        }
+    };
+    Tks.doNotify = function (title, options, events) {
+        if (options === void 0) { options = {}; }
+        var notification = new Notification(title, options);
+        if (events) {
+            for (var event in events) {
+                notification[event] = events[event];
+            }
+        }
+    };
+    /**
+     * 视频截图
+     * @param {HTMLVideoElement} videoEl 传入video元素
+     * @returns
+     */
+    Tks.captureVideo = function (videoEl) {
+        var canvasEl;
+        var dataUrl;
+        try {
+            var cps = window.getComputedStyle(videoEl);
+            var width = +cps.getPropertyValue("width").replace("px", "");
+            var height = +cps.getPropertyValue("height").replace("px", "");
+            canvasEl = document.createElement("canvas");
+            canvasEl.style.cssText = "position:fixed;left:-9999px";
+            canvasEl.height = height;
+            canvasEl.width = width;
+            document.body.appendChild(canvasEl);
+            var ctx = canvasEl.getContext("2d");
+            ctx.drawImage(videoEl, 0, 0, width, height);
+            // const image = canvas.toDataURL("image/png");
+            dataUrl = canvasEl.toDataURL();
+            document.body.removeChild(canvasEl);
+            canvasEl = null;
+            return dataUrl;
+        }
+        finally {
+            if (canvasEl) {
+                document.body.removeChild(canvasEl);
+            }
+            if (dataUrl) {
+                return dataUrl;
+            }
+        }
     };
     Tks.toolkitsName = pkg.name;
     Tks.version = pkg.version;
