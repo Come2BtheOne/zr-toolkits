@@ -1,11 +1,11 @@
 # zr-toolkits [![NPM Version][npm-image]][npm-url] [![NPM Downloads][downloads-image]][downloads-url] [![size-image]][size-url]
 
-<!-- [size-image]: https://badgen.net/bundlephobia/minzip/js-toolkits -->
-<!-- [size-url]: https://bundlephobia.com/result?p=js-toolkits -->
-<!-- [npm-image]: https://badgen.net/npm/v/js-toolkits -->
-<!-- [npm-url]: https://npmjs.org/package/js-toolkits -->
-<!-- [downloads-image]: https://badgen.net/npm/dt/js-toolkits -->
-<!-- [downloads-url]: https://npmjs.org/package/js-toolkits -->
+[size-image]: https://badgen.net/bundlephobia/minzip/zr-toolkits
+[size-url]: https://bundlephobia.com/result?p=zr-toolkits
+[npm-image]: https://badgen.net/npm/v/zr-toolkits
+[npm-url]: https://npmjs.org/package/zr-toolkits
+[downloads-image]: https://badgen.net/npm/dt/zr-toolkits
+[downloads-url]: https://npmjs.org/package/zr-toolkits
 
 ## 使用方式
 注：为简化操作，默认命名为"tks"
