@@ -10,39 +10,40 @@
 ## 使用方式
 注：为简化操作，默认命名为"tks"
 
-<!-- ```js
-npm install --save js-toolkits
+```js
+npm install --save zr-toolkits
 ```
 
 ### ES6
 ```js
-import tks from 'js-toolkits'
-tks.trim('test')
+import tks from 'zr-toolkits'
+tks.times(3.2, 5)
 ```
 ### CommonJS
 ```js
-var tks = require('js-toolkits');
-tks.trim('test')
+var tks = require('zr-toolkits');
+tks.times(3.2, 5)
 ```
 ### AMD
 ```js
-require(['js-toolkits'],function(tks){
- tks.trim('test')
+require(['zr-toolkits'],function(tks){
+ tks.times(3.2, 5)
 })
 ```
 ### CMD
 ```js
-seajs.use('js-toolkits',function(undefined){
+seajs.use('zr-toolkits',function(undefined){
     //插件没有遵循CMD规范，这里的tks是全局的
-    tks.trim('test')
+    tks.times(3.2, 5)
 });
 ```
 ### 直接引入
-```js
-<script src="js-toolkits.min.js"></script>
-tks.trim('test')
+```js 
+//  dist目录下的zr-toolkits.min.js
+<script src="zr-toolkits.min.js"></script>
+tks.times(3.2, 5)
 ```
-## 方法说明
+<!-- ## 方法说明
 方法名|用途|描述
 ---|:-:|---
 trim|字符串去空格|@param str {String} 需要处理的字符串<br>@param type {Boolean} 是否去除所有空格

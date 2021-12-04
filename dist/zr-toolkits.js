@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v1.0.0
+ * zr-toolkits v1.0.2
  * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -12,9 +12,9 @@
 }(this, (function () { 'use strict';
 
   var name = "zr-toolkits";
-  var version = "1.0.0";
+  var version = "1.0.2";
   var description = "切图仔巨献";
-  var main = "dist/zr-toolkits.min.js";
+  var main = "dist/zr-toolkits.es.js";
   var scripts = {
   	dev: "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.js --mode development",
   	build: "cross-env rollup -c",
@@ -30,7 +30,7 @@
   	type: "git",
   	url: "https://github.com/Come2BtheOne/zr-toolkits"
   };
-  var author = "weijhfly";
+  var author = "jizirui";
   var license = "MIT";
   var devDependencies = {
   	"@babel/core": "^7.6.4",
