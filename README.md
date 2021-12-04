@@ -1,4 +1,4 @@
-# zr-toolkits [![NPM Version][npm-image]][npm-url] [![NPM Downloads][downloads-image]][downloads-url] [![size-image]][size-url]
+# zr-toolkits [![NPM Version][npm-image]][npm-url] [![size-image]][size-url]
 
 [size-image]: https://badgen.net/bundlephobia/minzip/zr-toolkits
 [size-url]: https://bundlephobia.com/result?p=zr-toolkits
