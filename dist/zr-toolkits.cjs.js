@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v1.0.2
+ * zr-toolkits v1.0.3
  * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -8,7 +8,7 @@
 'use strict';
 
 var name = "zr-toolkits";
-var version = "1.0.2";
+var version = "1.0.3";
 var description = "切图仔巨献";
 var main = "dist/zr-toolkits.es.js";
 var scripts = {
@@ -49,9 +49,6 @@ var devDependencies = {
 	"webpack-dev-server": "^3.1.5",
 	"webpack-merge": "^4.2.2"
 };
-var dependencies = {
-	"storage-util": "^1.1.4"
-};
 var pkg = {
 	name: name,
 	version: version,
@@ -62,8 +59,7 @@ var pkg = {
 	repository: repository,
 	author: author,
 	license: license,
-	devDependencies: devDependencies,
-	dependencies: dependencies
+	devDependencies: devDependencies
 };
 
 var CheckStringKey;
@@ -140,31 +136,31 @@ var aCity = {
  * @author: 切图仔
  * @time: 2021-11-30 14:26:47
  */
-var Tks = /** @class */ (function () {
-    function Tks() {
+var Toolkits = /** @class */ (function () {
+    function Toolkits() {
     }
     /**
      * 判断一个字符串是否为空
-     * @param {value|undefined|null} value
+     * @param {string|undefined|null} value 需要判断的值
      * @return {boolean}
      */
-    Tks.isEmptyString = function (value) {
+    Toolkits.isEmptyString = function (value) {
         return (value === undefined || value === null || value === "");
     };
     /**
      * 判断一个值是否为对象
-     * @param value
-     * @return {boolean}
+     * @param {any} value   需要判断的值
+     * @return {boolean}    判断结果
      */
-    Tks.isObject = function (value) {
+    Toolkits.isObject = function (value) {
         return Object.prototype.toString.call(value) === '[object Object]';
     };
     /**
      * 判断一个对象是否为空
-     * @param obj
-     * @return {boolean}
+     * @param {Object} obj 需要判断的对象
+     * @return {boolean}  判断结果
      */
-    Tks.isEmptyObject = function (obj) {
+    Toolkits.isEmptyObject = function (obj) {
         if (this.isObject(obj)) {
             return Object.keys(obj).length === 0;
         }
@@ -176,13 +172,13 @@ var Tks = /** @class */ (function () {
      * 对数组对象去重
      * @param {Array} arr   需要去重的数组
      * @param {string} key  根据key值去重
-     * @returns {Array}
+     * @returns {Array} 去重结果
      *
      * 示例：
      * let Arr = [{name: 'a',id: 1}, {name: 'a',id: 2}, {name: 'b',id: 3}, {name: 'c',id: 4}]
      * deWeightThree(Arr, "name");
      */
-    Tks.deWeightThree = function (arr, key) {
+    Toolkits.deWeightThree = function (arr, key) {
         var obj = {};
         var _arr = arr.reduce(function (a, b) {
             obj[b[key]] ? '' : obj[b[key]] =  a.push(b);
@@ -191,12 +187,12 @@ var Tks = /** @class */ (function () {
         return _arr;
     };
     /**
-     * 递归查询树结构的某一个值
+     * 递归查询树结构的是否存在某一个值
      * @param {Array} arr   需要查找的数组
-     * @param {string} key  要查找的键名
+     * @param {string} keyName  要查找的键名
      * @param {any} keyValue 需要查找的值
-     * @param multilevelName  树结构内，包含子数组的对象名，默认children
-     * @returns {boolean} 是否找到
+     * @param {string} multilevelName  树结构内，包含子数组的对象名，默认children
+     * @returns {boolean} 是否存在
      *
      * 示例：
      * const Arr = [
@@ -216,15 +212,15 @@ var Tks = /** @class */ (function () {
      *  },
      * ]
      *
-     * searchRoutes(Arr, "id", 789, "children")
+     * searchValueInTree(Arr, "id", 789, "children")
      */
-    Tks.searchRoutes = function (arr, key, keyValue, multilevelName) {
+    Toolkits.searchValueInTree = function (arr, keyName, keyValue, multilevelName) {
         if (multilevelName === void 0) { multilevelName = 'children'; }
         for (var _i = 0, _a = arr || []; _i < _a.length; _i++) {
             var o = _a[_i];
-            if (o[key] === keyValue)
+            if (o[keyName] === keyValue)
                 return o;
-            var o_ = this.searchRoutes(o[multilevelName] || [], key, keyValue, multilevelName);
+            var o_ = this.searchValueInTree(o[multilevelName] || [], keyName, keyValue, multilevelName);
             if (o_)
                 return o_;
         }
@@ -233,7 +229,7 @@ var Tks = /** @class */ (function () {
      * 基于URL生成UUID
      * @returns {string} cd205467-0120-47b0-9444-894736d873c7
      */
-    Tks.genUUID = function () {
+    Toolkits.genUUID = function () {
         var url = URL.createObjectURL(new Blob([]));
         // const uuid = url.split("/").pop();
         var uuid = url.substring(url.lastIndexOf('/') + 1);
@@ -244,14 +240,14 @@ var Tks = /** @class */ (function () {
      * 基于日期对象和random生成随机ID
      * @returns {string}  1627635706897_652
      */
-    Tks.genRandomID = function () {
+    Toolkits.genRandomID = function () {
         return new Date().getTime() + '_' + (Math.random() * 10000).toFixed(0);
     };
     /**
    * 洗牌算法随机
-   * @param arr
+   * @param {Array} arr  需要打乱的数组
    */
-    Tks.shuffleRandom = function (arr) {
+    Toolkits.shuffleRandom = function (arr) {
         var result = [], random;
         while (arr.length > 0) {
             random = Math.floor(Math.random() * arr.length);
@@ -266,7 +262,7 @@ var Tks = /** @class */ (function () {
      * @param {number} max
      * @param {number} exact  精确到几位小数
      */
-    Tks.creatRandom = function (min, max, exact) {
+    Toolkits.creatRandom = function (min, max, exact) {
         if (exact === void 0) { exact = 0; }
         if (arguments.length === 0) {
             return Math.random();
@@ -279,15 +275,14 @@ var Tks = /** @class */ (function () {
         return +(exact === void (0) ? Math.round(range) : range.toFixed(exact));
     };
     /**
-     * 获取url上的参数
-     * @param {string} paramsKey  需要获取的参数的键值
+     * 获取url字符串上的参数
      * @param {string} url  链接
-     *
+     * @param {string} key  需要获取的参数的键名
      */
-    Tks.getUrlParamsValue = function (paramsKey, url) {
+    Toolkits.getUrlParamsValue = function (url, key) {
         if (URL) {
             var urlSP = new URL(url);
-            return urlSP.searchParams.get(paramsKey);
+            return urlSP.searchParams.get(key);
         }
     };
     /**
@@ -296,7 +291,7 @@ var Tks = /** @class */ (function () {
      * @param {TrimType} trimType  切割类型
      * @return {string}
      */
-    Tks.trim = function (str, trimType) {
+    Toolkits.trim = function (str, trimType) {
         if (trimType === void 0) { trimType = 2; }
         if (trimType !== undefined && TrimType.hasOwnProperty(trimType)) {
             return str.replace(TrimReg[TrimType[trimType]], "");
@@ -307,11 +302,12 @@ var Tks = /** @class */ (function () {
     };
     /**
      * 大小写转化
-     * @param {string} str
-     * @param {CaseType} caseType
+     * @param {string} str  字符串
+     * @param {CaseType} caseType  转换类型
      * @return {string}
      */
-    Tks.changeCase = function (str, caseType) {
+    Toolkits.changeCase = function (str, caseType) {
+        if (caseType === void 0) { caseType = 3; }
         switch (caseType) {
             case 1:
                 return str.replace(/\b\w+\b/g, function (word) {
@@ -343,7 +339,7 @@ var Tks = /** @class */ (function () {
      * @param {string} str
      * @return {boolean}
      */
-    Tks.isEmail = function (str) {
+    Toolkits.isEmail = function (str) {
         return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(str);
     };
     /**
@@ -351,7 +347,7 @@ var Tks = /** @class */ (function () {
      * @param {string} str
      * @return {boolean}
      */
-    Tks.isMobilePhone = function (str) {
+    Toolkits.isMobilePhone = function (str) {
         return /^1[0-9]{10}$/.test(str);
     };
     /**
@@ -359,7 +355,7 @@ var Tks = /** @class */ (function () {
      * @param {string} str
      * @return {boolean}
      */
-    Tks.isTelephone = function (str) {
+    Toolkits.isTelephone = function (str) {
         return /^([0-9]{3,4}-)?[0-9]{7,8}$/.test(str);
     };
     /**
@@ -368,7 +364,7 @@ var Tks = /** @class */ (function () {
      * @param {CheckStringKey} key  校验类型
      * @return {boolean}
      */
-    Tks.regCheckString = function (str, key) {
+    Toolkits.regCheckString = function (str, key) {
         if (key !== undefined && CheckStringReg.hasOwnProperty(key)) {
             for (var k in CheckStringReg) {
                 if (k === key) {
@@ -385,7 +381,7 @@ var Tks = /** @class */ (function () {
      * @param {string} sId  字符串类型的身份证号码
      * @return {boolean}
      */
-    Tks.strictCheckIDCard = function (sId) {
+    Toolkits.strictCheckIDCard = function (sId) {
         if (!/(^\d{15}$)|(^\d{17}(\d|X|x)$)/.test(sId)) {
             console.warn('你输入的身份证长度或格式错误');
             return false;
@@ -415,119 +411,12 @@ var Tks = /** @class */ (function () {
         return true;
     };
     /**
-     * 格式化金额格式  152,552.25
-     * @param {number} num  需要格式的数字
-     * @param {number} precision  精确到几位小数
-     */
-    Tks.formatMoney = function (num, precision) {
-        if (precision === void 0) { precision = 2; }
-        var _num = +num;
-        return _num.toLocaleString('zh', { minimumIntegerDigits: 1, minimumFractionDigits: precision, maximumFractionDigits: 0 });
-    };
-    /**
-     * 将小数转化成百分数
-     * @param {number} num  需要转化=的数字
-     * @param {number} precision  精确到几位小数
-     */
-    Tks.makePercent = function (num, precision) {
-        if (precision === void 0) { precision = 2; }
-        return num.toLocaleString('zh', { style: 'percent', maximumFractionDigits: precision });
-    };
-    /**
-     * 两个数精确相加
-     * @param {number} num1
-     * @param {number} num2
-     * @return {number}
-     */
-    Tks.plus = function (num1, num2) {
-        var r1 = 0, r2 = 0, m = 0;
-        try {
-            r1 = num1.toString().split(".")[1].length;
-        }
-        catch (e) {
-            r1 = 0;
-        }
-        try {
-            r2 = num2.toString().split(".")[1].length;
-        }
-        catch (e) {
-            r2 = 0;
-        }
-        m = Math.pow(10, Math.max(r1, r2));
-        return (num1 * m + num2 * m) / m;
-    };
-    /**
-     * 两个数精确相减
-     * @param {number} num1
-     * @param {number} num2
-     * @return {number}
-     */
-    Tks.minus = function (num1, num2) {
-        var r1 = 0, r2 = 0, m = 0;
-        try {
-            r1 = num1.toString().split(".")[1].length;
-        }
-        catch (e) {
-            r1 = 0;
-        }
-        try {
-            r2 = num2.toString().split(".")[1].length;
-        }
-        catch (e) {
-            r2 = 0;
-        }
-        m = Math.pow(10, Math.max(r1, r2));
-        return (num1 * m + num2 * m) / m;
-    };
-    /**
-     * 两个数精确相乘
-     * @param {number} num1
-     * @param {number} num2
-     * @return {number}
-     */
-    Tks.times = function (num1, num2) {
-        var m = 0, s1 = num1.toString(), s2 = num2.toString();
-        try {
-            m += s1.split(".")[1].length;
-        }
-        catch (e) { }
-        try {
-            m += s2.split(".")[1].length;
-        }
-        catch (e) { }
-        return (+s1.replace(".", "")) * (+s2.replace(".", "")) / Math.pow(10, m);
-    };
-    /**
-     * 两个数精确相除
-     * @param {number} num1
-     * @param {number} num2
-     * @return {number}
-     */
-    Tks.divide = function (num1, num2) {
-        var r1 = 0, r2 = 0, m = 0, n = 0;
-        try {
-            r1 = num1.toString().split(".")[1].length;
-        }
-        catch (e) {
-            r1 = 0;
-        }
-        try {
-            r2 = num2.toString().split(".")[1].length;
-        }
-        catch (e) {
-            r2 = 0;
-        }
-        m = Math.pow(10, Math.max(r1, r2));
-        n = (r1 >= r2) ? r1 : r2;
-        return +((num1 * m - num2 * m) / m).toFixed(n);
-    };
-    /**
      * 将时间戳转换成  2021/11/30 14:10:09
      * @param {number} ms   时间戳
      * @param {boolean} hour12    是否12小时制
      * @return {string}   2021/11/30 14:10:09
      */
-    Tks.formatMs = function (ms, hour12) {
+    Toolkits.formatMs = function (ms, hour12) {
         if (hour12 === void 0) { hour12 = false; }
         // @ts-ignore
         return ms.toLocaleString('zh', { hour12: hour12 });
@@ -539,7 +428,7 @@ var Tks = /** @class */ (function () {
      * @param {boolean} justHour  是否要满24小时加1天
      * @return {TimeDifference}
      */
-    Tks.calculateTimeDifference = function (endTime, startTime, justHour) {
+    Toolkits.calculateTimeDifference = function (endTime, startTime, justHour) {
         if (startTime === void 0) { startTime = +new Date(); }
         if (justHour === void 0) { justHour = false; }
         var t = endTime - startTime, day, hour, min, sec, over = false;
@@ -577,20 +466,129 @@ var Tks = /** @class */ (function () {
         if (sec < 10) {
             sec = '0' + sec;
         }
-        return {
-            day: day,
-            hour: hour,
-            min: min,
-            sec: sec,
+        var timeDifference = {
+            day: day + "",
+            hour: hour + "",
+            min: min + "",
+            sec: sec + "",
             over: over
         };
+        return timeDifference;
     };
     /**
-     * 异步加载Script标签
-     * @param {string} src Script标签src
+     * 格式化金额格式  152,552.25
+     * @param {number | string} num  需要格式的数字
+     * @param {number} precision  精确到几位小数
+     */
+    Toolkits.formatMoney = function (num, precision) {
+        if (precision === void 0) { precision = 2; }
+        var _num = +num;
+        return _num.toLocaleString('zh', { minimumIntegerDigits: 1, minimumFractionDigits: precision, maximumFractionDigits: 0 });
+    };
+    /**
+     * 将小数转化成百分数
+     * @param {number | string} num  需要转化的数字
+     * @param {number} precision  精确到几位小数
+     */
+    Toolkits.makePercent = function (num, precision) {
+        if (precision === void 0) { precision = 2; }
+        var _num = +num;
+        return _num.toLocaleString('zh', { style: 'percent', maximumFractionDigits: precision });
+    };
+    /**
+     * 两个数精确相加
+     * @param {number} num1
+     * @param {number} num2
+     * @return {number}
+     */
+    Toolkits.plus = function (num1, num2) {
+        var r1 = 0, r2 = 0, m = 0;
+        try {
+            r1 = num1.toString().split(".")[1].length;
+        }
+        catch (e) {
+            r1 = 0;
+        }
+        try {
+            r2 = num2.toString().split(".")[1].length;
+        }
+        catch (e) {
+            r2 = 0;
+        }
+        m = Math.pow(10, Math.max(r1, r2));
+        return (num1 * m + num2 * m) / m;
+    };
+    /**
+     * 两个数精确相减
+     * @param {number} num1
+     * @param {number} num2
+     * @return {number}
+     */
+    Toolkits.minus = function (num1, num2) {
+        var r1 = 0, r2 = 0, m = 0;
+        try {
+            r1 = num1.toString().split(".")[1].length;
+        }
+        catch (e) {
+            r1 = 0;
+        }
+        try {
+            r2 = num2.toString().split(".")[1].length;
+        }
+        catch (e) {
+            r2 = 0;
+        }
+        m = Math.pow(10, Math.max(r1, r2));
+        return (num1 * m + num2 * m) / m;
+    };
+    /**
+     * 两个数精确相乘
+     * @param {number} num1
+     * @param {number} num2
+     * @return {number}
+     */
+    Toolkits.times = function (num1, num2) {
+        var m = 0, s1 = num1.toString(), s2 = num2.toString();
+        try {
+            m += s1.split(".")[1].length;
+        }
+        catch (e) { }
+        try {
+            m += s2.split(".")[1].length;
+        }
+        catch (e) { }
+        return (+s1.replace(".", "")) * (+s2.replace(".", "")) / Math.pow(10, m);
+    };
+    /**
+     * 两个数精确相除
+     * @param {number} num1
+     * @param {number} num2
+     * @return {number}
+     */
+    Toolkits.divide = function (num1, num2) {
+        var r1 = 0, r2 = 0, m = 0, n = 0;
+        try {
+            r1 = num1.toString().split(".")[1].length;
+        }
+        catch (e) {
+            r1 = 0;
+        }
+        try {
+            r2 = num2.toString().split(".")[1].length;
+        }
+        catch (e) {
+            r2 = 0;
+        }
+        m = Math.pow(10, Math.max(r1, r2));
+        n = (r1 >= r2) ? r1 : r2;
+        return +((num1 * m - num2 * m) / m).toFixed(n);
+    };
+    /**
+     * 异步加载script标签
+     * @param {string} src script标签src
      * @param {()=> void} callback  回调函数 不传回调就会返回一个Promise
      */
-    Tks.syncLoadScript = function (src, callback) {
+    Toolkits.syncLoadScript = function (src, callback) {
         if (callback) {
             var _script = document.createElement('script');
             _script.src = src;
@@ -614,7 +612,7 @@ var Tks = /** @class */ (function () {
      * 当前设备是否为PC
      * @return {boolean}
      */
-    Tks.isPC = function () {
+    Toolkits.isPC = function () {
         var userAgentInfo = navigator.userAgent;
         var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
         var flag = true;
@@ -630,7 +628,7 @@ var Tks = /** @class */ (function () {
      * 当前设备是否为IOS
      * @return {boolean}
      */
-    Tks.isIOS = function () {
+    Toolkits.isIOS = function () {
         var u = navigator.userAgent;
         var _ios = false;
         _ios = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端\
@@ -640,7 +638,7 @@ var Tks = /** @class */ (function () {
      * 当前设备是否为Android
      * @return {boolean}
      */
-    Tks.isAndroid = function () {
+    Toolkits.isAndroid = function () {
         var u = navigator.userAgent;
         var _android = false;
         _android = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
@@ -648,10 +646,10 @@ var Tks = /** @class */ (function () {
     };
     /**
      * 通过url下载文件
-     * @param {string} url
-     * @param {string} fileName
+     * @param {string} url  下载链接
+     * @param {string} fileName   生成的文件名
      */
-    Tks.downloadByUrl = function (url, fileName) {
+    Toolkits.downloadByUrl = function (url, fileName) {
         if (fileName === void 0) { fileName = 'download'; }
         var link = document.createElement('a');
         link.setAttribute('href', url); //设置下载文件的url地址
@@ -664,7 +662,7 @@ var Tks = /** @class */ (function () {
      * @param {Blob} blob   文件流
      * @param {string} fileName   文件名
      */
-    Tks.downloadByBob = function (blob, fileName) {
+    Toolkits.downloadByBob = function (blob, fileName) {
         if (fileName === void 0) { fileName = "download"; }
         var _blob = new Blob([blob], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8',
@@ -682,7 +680,7 @@ var Tks = /** @class */ (function () {
      * 将内容复制到剪切板
      * @param {string} str
      */
-    Tks.copyToClipboard = function (str) {
+    Toolkits.copyToClipboard = function (str) {
         var el = document.createElement('textarea');
         el.value = str;
         el.setAttribute('readonly', '');
@@ -703,17 +701,16 @@ var Tks = /** @class */ (function () {
      * @param {HTMLElement} el  元素
      * @param {string} className  类名
      */
-    Tks.hasClass = function (el, className) {
+    Toolkits.hasClass = function (el, className) {
         var reg = new RegExp('(^|\\s)' + className + '(\\s|$)');
         return reg.test(el.className);
     };
     /**
      * 获取当前元素的滚动条滚动位置
      * @param el  元素
-     * @returns {{x: number, y: number}}  x,y轴滚动位置
+     * @returns {Object<{x: number, y: number}>}  x,y轴滚动位置
      */
-    Tks.getScrollPosition = function (el) {
-        if (el === void 0) { el = window; }
+    Toolkits.getScrollPosition = function (el) {
         return {
             x: el.pageXOffset !== undefined ? el.pageXOffset : el.scrollLeft,
             y: el.pageYOffset !== undefined ? el.pageYOffset : el.scrollTop
@@ -724,7 +721,7 @@ var Tks = /** @class */ (function () {
      * @param {()=> void} onHide  //隐藏
      * @param {()=> void} onShow  //显示
      */
-    Tks.watchVisibility = function (onHide, onShow) {
+    Toolkits.watchVisibility = function (onHide, onShow) {
         document.addEventListener("visibilitychange", function () {
             if (document.hidden) {
                 onHide && onHide();
@@ -747,7 +744,7 @@ var Tks = /** @class */ (function () {
     /**
      *  禁止右键、选择、复制
      */
-    Tks.disableWindowEvent = function () {
+    Toolkits.disableWindowEvent = function () {
         ['contextmenu', 'selectstart', 'copy'].forEach(function (ev) {
             document.addEventListener(ev, function (event) {
                 return (event.returnValue = false);
@@ -758,7 +755,7 @@ var Tks = /** @class */ (function () {
      * 唤起系统打电话功能
      * @param {string} receiver 打给谁
      */
-    Tks.phoneCall = function (receiver) {
+    Toolkits.phoneCall = function (receiver) {
         console.log('@系统电话：', receiver);
         this.send({ operation: OperationEnum.tel, receiver: receiver });
     };
@@ -766,7 +763,7 @@ var Tks = /** @class */ (function () {
      * 唤起系统短信功能
      * @param {string} receiver 发给谁
      */
-    Tks.sendMessage = function (receiver) {
+    Toolkits.sendMessage = function (receiver) {
         console.log('@系统短信：', receiver);
         this.send({ operation: OperationEnum.sms, receiver: receiver });
     };
@@ -774,11 +771,11 @@ var Tks = /** @class */ (function () {
      * 唤起系统发邮件功能
      * @param {string} receiver 发给谁
      */
-    Tks.sendEmail = function (receiver) {
+    Toolkits.sendEmail = function (receiver) {
         console.log('@系统邮件：', receiver);
         this.send({ operation: OperationEnum.mailto, receiver: receiver });
     };
-    Tks.send = function (options) {
+    Toolkits.send = function (options) {
         var aTag = document.createElement('a');
         aTag.href = "".concat(options.operation, ":").concat(options.receiver);
         document.body.appendChild(aTag);
@@ -790,7 +787,7 @@ var Tks = /** @class */ (function () {
      * @param {ShareOptions} shareOptions 分享参数
      * @returns {Promise}
      */
-    Tks.share = function (shareOptions) {
+    Toolkits.share = function (shareOptions) {
         if (shareOptions === void 0) { shareOptions = {}; }
         var _navigator = window.navigator;
         var isSupported = _navigator && 'canShare' in _navigator;
@@ -816,7 +813,7 @@ var Tks = /** @class */ (function () {
      * @param events
      * @returns
      */
-    Tks.notify = function (title, options, events) {
+    Toolkits.notify = function (title, options, events) {
         if (options === void 0) { options = {}; }
         if (!("Notification" in window)) {
             return console.error("This browser does not support desktop notification");
@@ -832,7 +829,7 @@ var Tks = /** @class */ (function () {
             });
         }
     };
-    Tks.doNotify = function (title, options, events) {
+    Toolkits.doNotify = function (title, options, events) {
         if (options === void 0) { options = {}; }
         var notification = new Notification(title, options);
         if (events) {
@@ -844,9 +841,9 @@ var Tks = /** @class */ (function () {
     /**
      * 视频截图
      * @param {HTMLVideoElement} videoEl 传入video元素
-     * @returns
+     * @returns {string} 图片地址
      */
-    Tks.captureVideo = function (videoEl) {
+    Toolkits.captureVideo = function (videoEl) {
         var canvasEl;
         var dataUrl;
         try {
@@ -875,9 +872,9 @@ var Tks = /** @class */ (function () {
             }
         }
     };
-    Tks.toolkitsName = pkg.name;
-    Tks.version = pkg.version;
-    return Tks;
+    Toolkits.toolkitsName = pkg.name;
+    Toolkits.version = pkg.version;
+    return Toolkits;
 }());
 
-module.exports = Tks;
+module.exports = Toolkits;

@@ -45,20 +45,21 @@
 	<script type="text/javascript" src="../dist/zr-toolkits.min.js"></script>
   <script>
     window.onload = () => {
-      console.log("tks ===>",tks)
-
-      console.log(tks.regCheckString('582271833', 'QQ'))
-      console.log(tks.strictCheckIDCard("440221199607277117AA"))
-      console.log(tks.creatRandom(5))
-      console.log(tks.trim(" sf s f ",3))
-      console.log(tks.changeCase("sdd", 1))
-	  tks.watchVisibility(document.getElementById("btn"))
-
-	  var arr3 = [{name: 'a',id: 1}, {name: 'a',id: 2}, {name: 'b',id: 3}, {name: 'c',id: 4},
- 		{name: 'c',id: 6}, {name: 'b',id: 6}, {name: 'd',id: 7},{name: 'd',id: 7,age:24},{name: 'e',id: 7,age:24}];
-		console.log(tks.deWeightThree(arr3, "id"));
-	  
+		console.log("tks ===>",tks)
+		console.log(tks.plus(24.5,52.2));
+		// const { calculateTimeDifference } = tks;
+		// const endtime = 1639059397000
+		// 	  startTime = +new Date();
+		// setInterval(()=>{
+		// 	const timeObj = tks.calculateTimeDifference(endtime);
+		// 	const timeString = `剩余 ${timeObj.hour}小时 ${timeObj.min}分 ${timeObj.sec}秒`
+		// 	console.log(timeObj);
+		// 	console.log(timeString);
+		// }, 1000)
     }
+
+
+
     const DL = () => {
     //   tks.downloadByUrl("https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF")
 	  console.log(tks.getScrollPosition(document.getElementById("box1")));

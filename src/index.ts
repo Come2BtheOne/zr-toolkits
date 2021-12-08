@@ -22,7 +22,7 @@ import {
   aCity 
 } from './config';
 
-export default class Tks {
+export default class Toolkits {
 
   public static readonly toolkitsName: string = pkg.name;
   public static readonly version: string = pkg.version;
@@ -30,7 +30,7 @@ export default class Tks {
 
   /**
    * 判断一个字符串是否为空
-   * @param {value|undefined|null} value
+   * @param {string|undefined|null} value 需要判断的值
    * @return {boolean}
    */
   public static isEmptyString(value: string | undefined | null): boolean {
@@ -39,8 +39,8 @@ export default class Tks {
 
   /**
    * 判断一个值是否为对象
-   * @param value
-   * @return {boolean}
+   * @param {any} value   需要判断的值
+   * @return {boolean}    判断结果
    */
   public static isObject(value: any): boolean {
     return Object.prototype.toString.call(value) === '[object Object]';
@@ -48,10 +48,10 @@ export default class Tks {
 
   /**
    * 判断一个对象是否为空
-   * @param obj
-   * @return {boolean}
+   * @param {Object} obj 需要判断的对象
+   * @return {boolean}  判断结果
    */
-  public static isEmptyObject(obj: any): boolean {
+  public static isEmptyObject(obj: Object): boolean {
     if(this.isObject(obj)){
       return Object.keys(obj).length === 0;
     } else {
@@ -63,7 +63,7 @@ export default class Tks {
    * 对数组对象去重
    * @param {Array} arr   需要去重的数组
    * @param {string} key  根据key值去重
-   * @returns {Array}
+   * @returns {Array} 去重结果
    * 
    * 示例：
    * let Arr = [{name: 'a',id: 1}, {name: 'a',id: 2}, {name: 'b',id: 3}, {name: 'c',id: 4}]
@@ -79,12 +79,12 @@ export default class Tks {
   }
 
 /**
- * 递归查询树结构的某一个值
+ * 递归查询树结构的是否存在某一个值
  * @param {Array} arr   需要查找的数组
- * @param {string} key  要查找的键名
+ * @param {string} keyName  要查找的键名
  * @param {any} keyValue 需要查找的值
- * @param multilevelName  树结构内，包含子数组的对象名，默认children
- * @returns {boolean} 是否找到
+ * @param {string} multilevelName  树结构内，包含子数组的对象名，默认children
+ * @returns {boolean} 是否存在
  * 
  * 示例：
  * const Arr = [
@@ -104,12 +104,12 @@ export default class Tks {
  *  },
  * ]
  * 
- * searchRoutes(Arr, "id", 789, "children")
+ * searchValueInTree(Arr, "id", 789, "children")
  */
-  public static searchRoutes(arr: Array<any>, key: string, keyValue: any, multilevelName: string = 'children'): boolean {
+  public static searchValueInTree(arr: Array<any>, keyName: string, keyValue: any, multilevelName: string = 'children'): boolean {
     for(let o of arr || []) {
-      if(o[key] === keyValue) return o
-      const o_ = this.searchRoutes(o[multilevelName] || [], key, keyValue, multilevelName)
+      if(o[keyName] === keyValue) return o
+      const o_ = this.searchValueInTree(o[multilevelName] || [], keyName, keyValue, multilevelName)
       if(o_) return o_
     }
   }
@@ -137,7 +137,7 @@ export default class Tks {
 
     /**
    * 洗牌算法随机
-   * @param arr
+   * @param {Array} arr  需要打乱的数组
    */
      public static shuffleRandom<T>(arr: Array<T>): Array<T> {
       let result: Array<any> = [], random;
@@ -168,15 +168,14 @@ export default class Tks {
 
 
   /**
-   * 获取url上的参数
-   * @param {string} paramsKey  需要获取的参数的键值
+   * 获取url字符串上的参数
    * @param {string} url  链接
-   *
+   * @param {string} key  需要获取的参数的键名
    */
-  public static getUrlParamsValue(paramsKey: string, url: string): string | null{
+  public static getUrlParamsValue(url: string, key: string): string | null{
     if(URL) {
       const urlSP = new URL(url);
-      return urlSP.searchParams.get(paramsKey);
+      return urlSP.searchParams.get(key);
     }
   }
 
@@ -196,11 +195,11 @@ export default class Tks {
 
   /**
    * 大小写转化
-   * @param {string} str
-   * @param {CaseType} caseType
+   * @param {string} str  字符串
+   * @param {CaseType} caseType  转换类型
    * @return {string}
    */
-  public static changeCase(str: string, caseType: CaseType): string {
+  public static changeCase(str: string, caseType: CaseType = 3): string {
     switch (caseType) {
       case 1:
         return str.replace(/\b\w+\b/g, function (word) {
@@ -315,22 +314,88 @@ export default class Tks {
 
 
   /**
+   * 将时间戳转换成  2021/11/30 14:10:09
+   * @param {number} ms   时间戳
+   * @param {boolean} hour12    是否12小时制
+   * @return {string}   2021/11/30 14:10:09
+   */
+  public static formatMs(ms: number, hour12: boolean = false): string {
+    // @ts-ignore
+    return ms.toLocaleString('zh', { hour12: hour12 });
+  }
+
+  /**
+   * 计算两个时间戳的时间差。可用来实现倒计时功能。
+   * @param {number} endTime  结束时间
+   * @param {number} startTime  开始时间
+   * @param {boolean} justHour  是否要满24小时加1天
+   * @return {TimeDifference}
+   */
+  public static calculateTimeDifference (endTime: number, startTime: number = +new Date(), justHour: boolean = false): TimeDifference {
+    let t = endTime - startTime,
+      day, hour, min, sec, over = false;
+    if (t <= 0) {
+      day = 0
+      hour = 0
+      min = 0
+      sec = 0
+      over = true
+    } else {
+      if(justHour) {
+        hour = Math.floor(t / 1000 / 60 / 60)
+        min = Math.floor(t / 1000 / 60 % 60)
+        sec = Math.floor(t / 1000 % 60)
+      } else {
+        day = Math.floor(t / 1000 / 60 / 60 / 24)
+        // hour = Math.floor(Math.floor(t / 1000 / 60 / 60 / 24) * 24 + (t / 1000 / 60 / 60 % 24))
+        // hour = Math.floor(t / 1000 / 60 / 60 / 24) * 24
+        hour = Math.floor(t / 1000 / 60 / 60 % 24)
+        min = Math.floor(t / 1000 / 60 % 60)
+        sec = Math.floor(t / 1000 % 60)
+      }
+    }
+    if (day < 10) {
+      day = '0' + day
+    }
+    if (hour < 10) {
+      hour = '0' + hour
+    }
+    if (min < 10) {
+      min = '0' + min
+    }
+    if (sec < 10) {
+      sec = '0' + sec
+    }
+
+    const timeDifference: TimeDifference = {
+      day: day+"",
+      hour: hour+"",
+      min: min+"",
+      sec: sec+"",
+      over
+    }
+    return timeDifference;
+  }
+
+  
+  /**
    * 格式化金额格式  152,552.25
-   * @param {number} num  需要格式的数字
+   * @param {number | string} num  需要格式的数字
    * @param {number} precision  精确到几位小数
    */
-  public static formatMoney(num: number, precision: number = 2) {
+   public static formatMoney(num: number | string, precision: number = 2) {
     const _num = +num;
     return _num.toLocaleString('zh', { minimumIntegerDigits: 1,minimumFractionDigits: precision, maximumFractionDigits: 0 });
   };
 
   /**
    * 将小数转化成百分数
-   * @param {number} num  需要转化=的数字
+   * @param {number | string} num  需要转化的数字
    * @param {number} precision  精确到几位小数
    */
-  public static makePercent(num: number, precision: number = 2) {
-    return num.toLocaleString('zh', { style: 'percent',maximumFractionDigits: precision });
+  public static makePercent(num: number | string, precision: number = 2) {
+    const _num = +num;
+    return _num.toLocaleString('zh', { style: 'percent',maximumFractionDigits: precision });
   }
 
   /**
@@ -390,71 +455,10 @@ export default class Tks {
   }
 
 
-  /**
-   * 将时间戳转换成  2021/11/30 14:10:09
-   * @param {number} ms   时间戳
-   * @param {boolean} hour12    是否12小时制
-   * @return {string}   2021/11/30 14:10:09
-   */
-  public static formatMs(ms: number, hour12: boolean = false): string {
-    // @ts-ignore
-    return ms.toLocaleString('zh', { hour12: hour12 });
-  }
 
   /**
-   * 计算两个时间戳的时间差。可用来实现倒计时功能。
-   * @param {number} endTime  结束时间
-   * @param {number} startTime  开始时间
-   * @param {boolean} justHour  是否要满24小时加1天
-   * @return {TimeDifference}
-   */
-  public static calculateTimeDifference (endTime: number, startTime: number = +new Date(), justHour: boolean = false): TimeDifference {
-    let t = endTime - startTime,
-      day, hour, min, sec, over = false;
-    if (t <= 0) {
-      day = 0
-      hour = 0
-      min = 0
-      sec = 0
-      over = true
-    } else {
-      if(justHour) {
-        hour = Math.floor(t / 1000 / 60 / 60)
-        min = Math.floor(t / 1000 / 60 % 60)
-        sec = Math.floor(t / 1000 % 60)
-      } else {
-        day = Math.floor(t / 1000 / 60 / 60 / 24)
-        // hour = Math.floor(Math.floor(t / 1000 / 60 / 60 / 24) * 24 + (t / 1000 / 60 / 60 % 24))
-        // hour = Math.floor(t / 1000 / 60 / 60 / 24) * 24
-        hour = Math.floor(t / 1000 / 60 / 60 % 24)
-        min = Math.floor(t / 1000 / 60 % 60)
-        sec = Math.floor(t / 1000 % 60)
-      }
-    }
-    if (day < 10) {
-      day = '0' + day
-    }
-    if (hour < 10) {
-      hour = '0' + hour
-    }
-    if (min < 10) {
-      min = '0' + min
-    }
-    if (sec < 10) {
-      sec = '0' + sec
-    }
-    return {
-      day,
-      hour,
-      min,
-      sec,
-      over
-    }
-  }
-
-  /**
-   * 异步加载Script标签
-   * @param {string} src Script标签src
+   * 异步加载script标签
+   * @param {string} src script标签src
    * @param {()=> void} callback  回调函数 不传回调就会返回一个Promise
    */
   public static syncLoadScript(src: string, callback?: Function): Promise<null> | void {
@@ -520,8 +524,8 @@ export default class Tks {
 
   /**
    * 通过url下载文件
-   * @param {string} url
-   * @param {string} fileName
+   * @param {string} url  下载链接
+   * @param {string} fileName   生成的文件名
    */
   public static downloadByUrl(url: string, fileName: string = 'download'): void {
     const link = document.createElement('a');
@@ -585,9 +589,9 @@ export default class Tks {
   /**
    * 获取当前元素的滚动条滚动位置
    * @param el  元素 
-   * @returns {{x: number, y: number}}  x,y轴滚动位置
+   * @returns {Object<{x: number, y: number}>}  x,y轴滚动位置
    */
-  public static getScrollPosition(el: any = window): {x: number, y: number} {
+  public static getScrollPosition(el: any): {x: number, y: number} {
     return {
       x: el.pageXOffset !== undefined ? el.pageXOffset : el.scrollLeft,
       y: el.pageYOffset !== undefined ? el.pageYOffset : el.scrollTop
@@ -619,7 +623,6 @@ export default class Tks {
     }
   }
 
-
   /**
    *  禁止右键、选择、复制
    */
@@ -630,6 +633,8 @@ export default class Tks {
       })
     })
   }
+
+
 
   /**
    * 唤起系统打电话功能
@@ -698,7 +703,7 @@ export default class Tks {
  * @param events 
  * @returns 
  */
-  public static notify(title: string, options: NotificationOptions = {}, events?: NotificationEventMap) {
+  public static notify(title: string, options: NotificationOptions = {}, events?: NotificationEventMap): void {
     if (!("Notification" in window)) {
       return console.error("This browser does not support desktop notification");
     }
@@ -713,7 +718,7 @@ export default class Tks {
       });
     }
   }
-  public static doNotify(title: string, options: NotificationOptions = {}, events?: NotificationEventMap) {
+  public static doNotify(title: string, options: NotificationOptions = {}, events?: NotificationEventMap): void {
     const notification = new Notification(title, options);
     if(events) {
       for (let event in events) {
@@ -725,9 +730,9 @@ export default class Tks {
   /**
    * 视频截图
    * @param {HTMLVideoElement} videoEl 传入video元素
-   * @returns 
+   * @returns {string} 图片地址
    */
-  public static captureVideo(videoEl: HTMLVideoElement) {
+  public static captureVideo(videoEl: HTMLVideoElement): string {
     let canvasEl;
     let dataUrl;
     try {

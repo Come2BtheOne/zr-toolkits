@@ -1,8 +1,8 @@
 export interface TimeDifference {
-  day: number
-  hour: number
-  min: number
-  sec: number
+  day: string
+  hour: string
+  min: string
+  sec: string
   over: boolean   //两个时间是否相等
 }
 
