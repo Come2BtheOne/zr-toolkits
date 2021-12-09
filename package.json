@@ -5,6 +5,7 @@
   "main": "dist/zr-toolkits.js",
   "unpkg": "dist/zr-toolkits.min.js",
   "module": "dist/zr-toolkits.es.js",
+  "types": "src/types.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.js --mode development",
     "build": "cross-env rollup -c",
