@@ -331,7 +331,7 @@ setInterval(()=>{
 
 | 方法用途           | 参数        | 说明           | 类型               | 是否必传 | 默认值 |        返回值        |
 | ------------------ | ----------- | :------------- | :----------------- | :------: | :----: | :------------------: |
-| *带图带事件的桌面通知* | *title* | 通知的标题 | string |   true   |   {}  | - |
+| 带图带事件的桌面通知 | *title* | 通知的标题 | string |   true   |   {}  | - |
 |  | *options* | 参数和事件参考 | NotificationOptions | false | {} |  |
 |  | *events* | *https://developer.mozilla.org/zh-CN/docs/Web/API/notification* | NotificationEventMap | false | - |  |
 

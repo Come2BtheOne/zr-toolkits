@@ -7,8 +7,8 @@ module.exports = {
     output: {
         filename: `${pkg.name}.min.js`,
         path: path.resolve('dist'),
-        library      : 'tks',
-        // libraryTarget: 'umd',
+        library: 'tks',
+        libraryTarget: 'umd',
         libraryExport: "default",
     },
     devServer: {
@@ -16,13 +16,13 @@ module.exports = {
         host: 'localhost',
         //host: '0.0.0.0',
         port: 9090,
-        open: false,
-        hot: false
+        open: true,
+        hot: true
     },
     module:{
         rules:[
 			{
-			  test: /\.tsx?$/,
+			  test: /\.ts?$/,
 			  use: {
 				loader: 'ts-loader'
 			  }
