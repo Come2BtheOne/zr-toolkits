@@ -16,8 +16,8 @@ module.exports = {
         host: 'localhost',
         //host: '0.0.0.0',
         port: 9090,
-        open: true,
-        hot: true
+        open: false,
+        hot: false
     },
     module:{
         rules:[

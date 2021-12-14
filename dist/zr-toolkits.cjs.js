@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v1.1.1
+ * zr-toolkits v2.0.0
  * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -44,12 +44,12 @@ function __decorate(decorators, target, key, desc) {
 }
 
 var name = "zr-toolkits";
-var version = "1.1.1";
+var version = "2.0.0";
 var description = "切图仔巨献";
 var main = "dist/zr-toolkits.js";
 var unpkg = "dist/zr-toolkits.min.js";
 var module$1 = "dist/zr-toolkits.es.js";
-var types = "src/types.d.ts";
+var types = "src/types.ts";
 var scripts = {
 	dev: "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.js --mode development",
 	build: "cross-env rollup -c",
@@ -986,6 +986,72 @@ function Other(targetClass) {
     }(targetClass));
 }
 
+var Observer = /** @class */ (function () {
+    function Observer() {
+    }
+    /**
+     * 发布/ 触发
+     * @param eventName
+     * @param payload
+     */
+    Observer.emit = function (eventName, payload) {
+        var callbackList = Observer.Events[eventName] || [];
+        // 如果用js写，遍历的时候要做一下判断是否是函数，ts 用类型约束，在调用或者编译阶段会检测是否合法
+        // callbackList.map(fn=>{
+        //     if(typeof fn==="function") fn.apply(this,args)
+        // })
+        callbackList.forEach(function (fn) { return fn(payload); });
+    };
+    /**
+     * 订阅/监听
+     * @param eventName
+     * @param callback
+     */
+    Observer.on = function (eventName, callback) {
+        // if(!eventName||typeof eventName !=="string") return  ；// 因为用了ts 写，所以这句不用写了，如果是js写，建议加这判断
+        var callbackList = Observer.Events[eventName] || [];
+        callback && callbackList.push(callback);
+        Observer.Events[eventName] = callbackList;
+    };
+    /**
+     * 只订阅一次/监听一次：
+     * 思路：
+     * 1. 重新包装一个回调函数(有名的)，进行注册订阅/监听,
+     * 2. 包装函数里面直接调用 once方法的第二个参数回调函数，然后调用off方法 卸载该包装函数
+     * @param eventName
+     * @param callback
+     */
+    Observer.once = function (eventName, callback) {
+        // if(!eventName||typeof eventName !=="string") return ；
+        var decor = function (payload) {
+            callback && callback(payload);
+            Observer.off(eventName, decor);
+        };
+        Observer.on(eventName, decor);
+    };
+    /**
+     * 卸载/取消 某一个回调监听(不是取消eventName的所有回调监听),主要配合once一起,实例单独调用,无意义
+     * @param eventName
+     * @param callback
+     */
+    Observer.off = function (eventName, callback) {
+        var callbackList = Observer.Events[eventName] || [];
+        var resCallbacks = callbackList.filter(function (fn) { return fn !== callback; });
+        Observer.Events[eventName] = resCallbacks;
+    };
+    /**
+     * 卸载/取消 指定eventName 的所有订阅/监听
+     * @param eventName
+     * @param callback
+     */
+    Observer.remove = function (eventName, callback) {
+        Observer.Events[eventName] = [];
+        callback && callback();
+    };
+    Observer.Events = {}; //约束示例:{"eventName":[function(){},function(){},.....],......}
+    return Observer;
+}());
+
 /**
  * @name:工具库
  * @author: 切图仔
@@ -994,9 +1060,23 @@ function Other(targetClass) {
 var Toolkits = /** @class */ (function () {
     function Toolkits() {
     }
+    Toolkits_1 = Toolkits;
+    Toolkits.useObserver = function () {
+        if (!Toolkits_1.observer) {
+            Toolkits_1.observer = Observer;
+        }
+        return {
+            on: Toolkits_1.observer.on,
+            off: Toolkits_1.observer.off,
+            once: Toolkits_1.observer.once,
+            emit: Toolkits_1.observer.emit,
+            remove: Toolkits_1.observer.remove
+        };
+    };
+    var Toolkits_1;
     Toolkits.toolkitsName = pkg.name;
     Toolkits.version = pkg.version;
-    Toolkits = __decorate([
+    Toolkits = Toolkits_1 = __decorate([
         Other,
         SystemApi,
         Num,

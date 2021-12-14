@@ -3,92 +3,111 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>zr-toolkits test</title>
 	<style>
-		html{
+		html {
 			max-width: 1024px;
 			margin: 0 auto;
 		}
-		section{
+
+		section {
 			padding: 5px;
 			background: #f7f7f7;
 		}
+
 		@media(min-width: 1024px) {
-			section{
+			section {
 				padding: 0 20px 20px;
 			}
 		}
 	</style>
-  <script src='../dist/zr-toolkits.min.js'></script>
 </head>
-	<h1>zr-toolkits</h1>
-	<h2>一个小巧而实用的js工具库</h2>
-	<section>
-		<code></code>
-	<div id="box1" style="height: 200px; overflow: auto;">
+<h1>zr-toolkits</h1>
+<h2>一个小巧而实用的js工具库</h2>
+<section>
+	<code></code>
+	<div id="box1" style="height: 200px; overflow: auto; background-color: chartreuse;">
 		<div style="height: 100px;width: 150vw;"></div>
 		<div style="height: 100px;width: 150vw;"></div>
 		<div style="height: 100px;width: 150vw;"></div>
 		<div style="height: 100px;width: 150vw;"></div>
 	</div>
-    <button id="btn" onclick='DL()'>获取滚动</button>
-    <br>
-    <span>将会复制这行</span><button onclick='cpoy()'>复制</button>
+	<button id="btn" onclick='DL()'>获取滚动</button>
+	<br>
+	<span>将会复制这行</span><button onclick='cpoy()'>复制</button>
 	<br>
 	<button onclick="share()">分享</button>
 	<br>
 	<button onclick="callMe()">打电话</button>
-	</section>
+	<br>
+
+</section>
+
 <body>
-  <script type="text/javascript" src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-	<script type="text/javascript" src="../dist/zr-toolkits.min.js"></script>
-  <script>
-    window.onload = () => {
-		console.log("tks ===>",tks)
-		// console.log(tks.plus(24.5,52.2));
-		// console.log(tks.isEmptyString(undefined));
-		console.log(tks.genUUID());
-		// const { calculateTimeDifference } = tks;
-		// const endtime = 1639059397000
-		// 	  startTime = +new Date();
-		// setInterval(()=>{
-		// 	const timeObj = tks.calculateTimeDifference(endtime);
-		// 	const timeString = `剩余 ${timeObj.hour}小时 ${timeObj.min}分 ${timeObj.sec}秒`
-		// 	console.log(timeObj);
-		// 	console.log(timeString);
-		// }, 1000)
-    }
+	<script type="text/javascript" src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+	<script src='../dist/zr-toolkits.min.js'></script>
 
+	<script>
+		console.log("tks ===>", tks)
+		window.onload = () => {
 
-
-    const DL = () => {
-    //   tks.downloadByUrl("https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF")
-	  console.log(tks.getScrollPosition(document.getElementById("box1")));
-    }
-    const cpoy = () => {
-      tks.copyToClipboard("将会复制这行")
-    }
-
-	const share = async () => {
-		try{
-			await tks.share({title:"aaa",text: "dddd"})
-			console.log("成功");
-		}catch(err){
-			console.log(err);
 		}
-	}
 
-	const callMe = () => {
-		tks.phoneCall("110")
-	}
-  </script>
+
+		const DL = () => {
+			//   tks.downloadByUrl("https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF")
+			console.log(tks.getScrollPosition(document.getElementById("box1")));
+		}
+		const cpoy = () => {
+			tks.copyToClipboard("将会复制这行")
+		}
+		const share = async () => {
+			try {
+				await tks.share({ title: "aaa", text: "dddd" })
+				console.log("成功");
+			} catch (err) {
+				console.log(err);
+			}
+		}
+		const callMe = () => {
+			tks.phoneCall("110");
+		}
+	</script>
+
+	<script type="module">
+		const { once, on, off, emit, remove } = tks.useObserver();
+		const musicList = ["七里香", "暧昧", "冠军", "小丑"]
+		setInterval(() => {
+			let randomIdx = tks.creatRandom(0, 3)
+			emit("musicPlay", musicList[randomIdx])
+		}, 2000)
+	</script>
+
+	<script type="module">
+		const { once, on, off, emit, remove } = tks.useObserver();
+		const callBack = (res) => {
+			console.log("网易云音乐", res)
+		}
+		on("musicPlay", callBack)
+		setTimeout(()=>{
+			off("musicPlay", callBack)
+		}, 10000)
+	</script>
+
+<script type="module">
+	const { once, on, emit, remove } = tks.useObserver();
+	on("musicPlay", (res) => {
+		console.log("QQ音乐", res);
+	})
+</script>
 
 	<script>
 		let text = document.querySelector('script').innerText;
 
 		text = text.substr(text.indexOf('/*') - 4);
-		text = text.substr(0,text.lastIndexOf('}'));
+		text = text.substr(0, text.lastIndexOf('}'));
 
 		document.querySelector('code').innerText = text;
 	</script>

@@ -14,6 +14,7 @@ import Time from './utils/Time';
 import Num from './utils/Num';
 import SystemApi from './utils/SystemApi';
 import Other from './utils/Other';
+import Observer from './utils/Observer';
 
 @Other
 @SystemApi
@@ -26,4 +27,18 @@ import Other from './utils/Other';
 export default class Toolkits {
   public static readonly toolkitsName: string = pkg.name;
   public static readonly version: string = pkg.version;
+
+  static observer: any;
+  static useObserver() {
+    if (!Toolkits.observer) {
+      Toolkits.observer = Observer;
+    }
+    return {
+      on: Toolkits.observer.on,
+      off: Toolkits.observer.off,
+      once: Toolkits.observer.once,
+      emit: Toolkits.observer.emit,
+      remove: Toolkits.observer.remove
+    }
+  }
 }
