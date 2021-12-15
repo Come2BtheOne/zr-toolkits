@@ -45,6 +45,6 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "zr-toolkits": "^2.0.0"
+    "zr-toolkits": "^2.1.0"
   }
 }

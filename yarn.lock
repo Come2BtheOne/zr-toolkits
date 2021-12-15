@@ -7208,3 +7208,10 @@ zr-toolkits@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/zr-toolkits/download/zr-toolkits-2.0.0.tgz#8af0b41ee691ba8e68247d0e29a1da8a57fc739e"
   integrity sha512-svlk7SNmTl0miWmDz6VsFxul4YwJ1g16E8fQ4oNgrAjEuX84wUzwTpL8zruIYHpyE24oRdGGrhirfNlaY4lpVg==
+
+zr-toolkits@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/zr-toolkits/-/zr-toolkits-2.1.0.tgz#7e678595902306265deee767910051f202375406"
+  integrity sha512-jKEGRC2VgwbJWetkt/NitP+jsaBc1P3owhMv1maxkiVJH0DJZ/KXIm/N53cLBAT+UR7LVmHkQySuVrAaFOqNwA==
+  dependencies:
+    zr-toolkits "^2.0.0"
