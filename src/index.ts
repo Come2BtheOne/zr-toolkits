@@ -6,15 +6,15 @@
 
 import pkg from '../package.json';
 
-import Dataset from './utils/Dataset';
-import Random from './utils/Random';
-import Character from './utils/Character';
-import Regexp from './utils/Regexp';
-import Time from './utils/Time';
-import Num from './utils/Num';
-import SystemApi from './utils/SystemApi';
-import Other from './utils/Other';
-import Observer from './utils/Observer';
+import Dataset from './HOC/Dataset';
+import Random from './HOC/Random';
+import Character from './HOC/Character';
+import Regexp from './HOC/Regexp';
+import Time from './HOC/Time';
+import Num from './HOC/Num';
+import SystemApi from './HOC/SystemApi';
+import Other from './HOC/Other';
+import Observer from './HOC/Observer';
 
 @Other
 @SystemApi
@@ -25,8 +25,8 @@ import Observer from './utils/Observer';
 @Random
 @Dataset
 export default class Toolkits {
-  public static readonly toolkitsName: string = pkg.name;
-  public static readonly version: string = pkg.version;
+  static readonly utilsName: string = pkg.name;
+  static readonly version: string = pkg.version;
 
   static observer: any;
   static useObserver() {
