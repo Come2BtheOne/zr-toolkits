@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v2.1.0
+ * zr-toolkits v2.1.1
  * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -28,7 +28,7 @@ function __decorate(decorators, target, key, desc) {
 }
 
 var name = "zr-toolkits";
-var version = "2.1.0";
+var version = "2.1.1";
 var description = "切图仔巨献";
 var main = "dist/zr-toolkits.js";
 var unpkg = "dist/zr-toolkits.min.js";
@@ -190,7 +190,7 @@ var Dataset = /** @class */ (function () {
             var o = _a[_i];
             if (o[keyName] === keyValue)
                 return o;
-            var o_ = this.searchValueInTree(o[multilevelName] || [], keyName, keyValue, multilevelName);
+            var o_ = new Dataset().searchValueInTree(o[multilevelName] || [], keyName, keyValue, multilevelName);
             if (o_)
                 return o_;
         }
@@ -682,7 +682,7 @@ var SystemApi = /** @class */ (function () {
      */
     SystemApi.prototype.phoneCall = function (receiver) {
         console.log('@系统电话：', receiver);
-        this.send({ operation: OperationEnum.tel, receiver: receiver });
+        new SystemApi().send({ operation: OperationEnum.tel, receiver: receiver });
     };
     /**
      * 唤起系统短信功能
@@ -690,7 +690,7 @@ var SystemApi = /** @class */ (function () {
      */
     SystemApi.prototype.sendMessage = function (receiver) {
         console.log('@系统短信：', receiver);
-        this.send({ operation: OperationEnum.sms, receiver: receiver });
+        new SystemApi().send({ operation: OperationEnum.sms, receiver: receiver });
     };
     /**
      * 唤起系统发邮件功能
@@ -698,7 +698,7 @@ var SystemApi = /** @class */ (function () {
      */
     SystemApi.prototype.sendEmail = function (receiver) {
         console.log('@系统邮件：', receiver);
-        this.send({ operation: OperationEnum.mailto, receiver: receiver });
+        new SystemApi().send({ operation: OperationEnum.mailto, receiver: receiver });
     };
     SystemApi.prototype.send = function (options) {
         var aTag = document.createElement('a');
@@ -744,12 +744,12 @@ var SystemApi = /** @class */ (function () {
             return console.error("This browser does not support desktop notification");
         }
         else if (Notification.permission === "granted") {
-            this.doNotify(title, options, events);
+            new SystemApi().doNotify(title, options, events);
         }
         else if (Notification.permission !== "denied") {
             Notification.requestPermission().then(function (permission) {
                 if (permission === "granted") {
-                    this.doNotify(title, options, events);
+                    new SystemApi().doNotify(title, options, events);
                 }
             });
         }
