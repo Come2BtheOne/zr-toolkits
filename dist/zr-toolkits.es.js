@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v2.0.0
+ * zr-toolkits v2.1.0
  * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -28,7 +28,7 @@ function __decorate(decorators, target, key, desc) {
 }
 
 var name = "zr-toolkits";
-var version = "2.0.0";
+var version = "2.1.0";
 var description = "切图仔巨献";
 var main = "dist/zr-toolkits.js";
 var unpkg = "dist/zr-toolkits.min.js";
@@ -52,11 +52,14 @@ var repository = {
 var author = "jizirui";
 var license = "MIT";
 var devDependencies = {
-	"@babel/core": "^7.6.4",
-	"@babel/preset-env": "^7.6.3",
+	"@babel/core": "^7.16.5",
+	"@babel/preset-env": "^7.16.5",
+	"@babel/preset-typescript": "^7.16.5",
+	"@types/jest": "^27.0.3",
+	"babel-jest": "^27.4.5",
 	"cross-env": "^5.2.0",
 	"html-webpack-plugin": "^3.2.0",
-	jest: "^24.9.0",
+	jest: "^27.4.5",
 	rollup: "^1.24.0",
 	"rollup-plugin-banner": "^0.2.1",
 	"rollup-plugin-commonjs": "^10.1.0",
@@ -73,7 +76,6 @@ var devDependencies = {
 	"webpack-merge": "^4.2.2"
 };
 var dependencies = {
-	"zr-toolkits": "^2.0.0"
 };
 var pkg = {
 	name: name,
@@ -129,7 +131,7 @@ var Dataset = /** @class */ (function () {
      * @return {boolean}  判断结果
      */
     Dataset.prototype.isEmptyObject = function (obj) {
-        if (this.isObject(obj)) {
+        if (new Dataset().isObject(obj)) {
             return Object.keys(obj).length === 0;
         }
         else {

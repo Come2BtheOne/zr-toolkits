@@ -9,7 +9,7 @@ class SystemApi {
    */
   public phoneCall(receiver: string) {
     console.log('@系统电话：', receiver);
-    this.send({ operation: OperationEnum.tel, receiver })
+    new SystemApi().send({ operation: OperationEnum.tel, receiver })
   }
 
 
@@ -19,7 +19,7 @@ class SystemApi {
    */
   public sendMessage(receiver: string) {
     console.log('@系统短信：', receiver);
-    this.send({ operation: OperationEnum.sms, receiver })
+    new SystemApi().send({ operation: OperationEnum.sms, receiver })
   }
 
 
@@ -29,7 +29,7 @@ class SystemApi {
    */
   public sendEmail(receiver: string) {
     console.log('@系统邮件：', receiver);
-    this.send({ operation: OperationEnum.mailto, receiver })
+    new SystemApi().send({ operation: OperationEnum.mailto, receiver })
   }
   public send(options: SendOptions) {
     let aTag = document.createElement('a');
@@ -77,12 +77,12 @@ class SystemApi {
       return console.error("This browser does not support desktop notification");
     }
     else if (Notification.permission === "granted") {
-      this.doNotify(title, options, events);
+      new SystemApi().doNotify(title, options, events);
     }
     else if (Notification.permission !== "denied") {
       Notification.requestPermission().then(function (permission) {
         if (permission === "granted") {
-          this.doNotify(title, options, events);
+          new SystemApi().doNotify(title, options, events);
         }
       });
     }

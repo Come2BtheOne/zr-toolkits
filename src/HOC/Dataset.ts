@@ -29,7 +29,7 @@ class Dataset {
      * @return {boolean}  判断结果
      */
     public isEmptyObject(obj: Object): boolean {
-        if (this.isObject(obj)) {
+        if (new Dataset().isObject(obj)) {
             return Object.keys(obj).length === 0;
         } else {
             throw (`[${pkg.name}.isEmptyObject()]\n入参非对象类型`);
@@ -88,7 +88,7 @@ class Dataset {
     public searchValueInTree(arr: Array<any>, keyName: string, keyValue: any, multilevelName: string = 'children'): boolean {
         for (let o of arr || []) {
             if (o[keyName] === keyValue) return o
-            const o_ = this.searchValueInTree(o[multilevelName] || [], keyName, keyValue, multilevelName)
+            const o_ = new Dataset().searchValueInTree(o[multilevelName] || [], keyName, keyValue, multilevelName)
             if (o_) return o_
         }
     }
