@@ -1,6 +1,6 @@
 {
   "name": "zr-toolkits",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "切图仔巨献",
   "main": "dist/zr-toolkits.js",
   "unpkg": "dist/zr-toolkits.min.js",
