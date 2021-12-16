@@ -9,10 +9,19 @@ class Character {
      * @param {string} url  链接
      * @param {string} key  需要获取的参数的键名
      */
-    public getUrlParamsValue(url: string, key: string): string | null {
-        if (URL) {
+    public getUrlParamsValue(url: string, key?: string): Object | string | null {
+        if (key) {
             const urlSP = new URL(url);
             return urlSP.searchParams.get(key);
+        } else {
+            let params = {};
+            let urls = url.split("?");
+            let arr = urls[1].split("&");
+            for (let i = 0, l = arr.length; i < l; i++) {
+                let a = arr[i].split("=");
+                params[a[0]] = a[1];
+            }
+            return params;
         }
     }
 

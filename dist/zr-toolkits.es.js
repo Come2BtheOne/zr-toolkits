@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v2.1.1
+ * zr-toolkits v2.1.2
  * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -28,7 +28,7 @@ function __decorate(decorators, target, key, desc) {
 }
 
 var name = "zr-toolkits";
-var version = "2.1.1";
+var version = "2.1.2";
 var description = "切图仔巨献";
 var main = "dist/zr-toolkits.js";
 var unpkg = "dist/zr-toolkits.min.js";
@@ -337,9 +337,19 @@ var Character = /** @class */ (function () {
      * @param {string} key  需要获取的参数的键名
      */
     Character.prototype.getUrlParamsValue = function (url, key) {
-        if (URL) {
+        if (key) {
             var urlSP = new URL(url);
             return urlSP.searchParams.get(key);
+        }
+        else {
+            var params = {};
+            var urls = url.split("?");
+            var arr = urls[1].split("&");
+            for (var i = 0, l = arr.length; i < l; i++) {
+                var a = arr[i].split("=");
+                params[a[0]] = a[1];
+            }
+            return params;
         }
     };
     /**
