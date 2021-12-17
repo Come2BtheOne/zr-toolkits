@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v2.1.2
+ * zr-toolkits v2.1.3
  * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -28,7 +28,7 @@ function __decorate(decorators, target, key, desc) {
 }
 
 var name = "zr-toolkits";
-var version = "2.1.2";
+var version = "2.1.3";
 var description = "切图仔巨献";
 var main = "dist/zr-toolkits.js";
 var unpkg = "dist/zr-toolkits.min.js";
@@ -201,63 +201,40 @@ function Dataset$1 (targetClass) {
     return mixin(Dataset, targetClass);
 }
 
-var Random = /** @class */ (function () {
-    function Random() {
-    }
-    /**
-     * 基于URL生成UUID
-     * @returns {string} cd205467-0120-47b0-9444-894736d873c7
-     */
-    Random.prototype.genUUID = function () {
-        var url = URL.createObjectURL(new Blob([]));
-        // const uuid = url.split("/").pop();
-        var uuid = url.substring(url.lastIndexOf('/') + 1);
-        URL.revokeObjectURL(url);
-        return uuid;
-    };
-    /**
-     * 基于日期对象和random生成随机ID
-     * @returns {string}  1627635706897_652
-     */
-    Random.prototype.genRandomID = function () {
-        return new Date().getTime() + '_' + (Math.random() * 10000).toFixed(0);
-    };
-    /**
-   * 洗牌算法随机
-   * @param {Array} arr  需要打乱的数组
-   */
-    Random.prototype.shuffleRandom = function (arr) {
-        var result = [], random;
-        while (arr.length > 0) {
-            random = Math.floor(Math.random() * arr.length);
-            result.push(arr[random]);
-            arr.splice(random, 1);
-        }
-        return result;
-    };
-    /**
-     * 在一个范围内生成随机数
-     * @param {number} min
-     * @param {number} max
-     * @param {number} exact  精确到几位小数
-     */
-    Random.prototype.creatRandom = function (min, max, exact) {
-        if (exact === void 0) { exact = 0; }
-        if (arguments.length === 0) {
-            return Math.random();
-        }
-        else if (arguments.length === 1) {
-            max = min;
-            min = 0;
-        }
-        var range = min + (Math.random() * (max - min));
-        return +(exact === void (0) ? Math.round(range) : range.toFixed(exact));
-    };
-    return Random;
-}());
-function Random$1 (targetClass) {
-    return mixin(Random, targetClass);
-}
+var CheckStringReg = {
+    phone: /^1[3|4|5|6|7|8|9][0-9]{9}$/,
+    tel: /^(0\d{2,3}-\d{7,8})(-\d{1,4})?$/,
+    card: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+    pwd: /^[a-zA-Z]\w{5,17}$/,
+    postal: /[1-9]\d{5}(?!\d)/,
+    QQ: /^[1-9][0-9]{4,9}$/,
+    email: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
+    money: /^\d*(?:\.\d{0,2})?$/,
+    URL: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/,
+    IP: /((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d))/,
+    number: /^[0-9]$/,
+    english: /^[a-zA-Z]+$/,
+    chinese: /^[\\u4E00-\\u9FA5]+$/,
+    lower: /^[a-z]+$/,
+    upper: /^[A-Z]+$/,
+    HTML: /<("[^"]*"|'[^']*'|[^'">])*>/ //HTML标记
+};
+var TrimReg = {
+    allSpace: /\s+/g,
+    prevNextSpace: /(^\s*)|(\s*$)/g,
+    prevSpace: /(^\s*)/g,
+    nextSpace: /(\s*$)/g //后空格
+};
+var aCity = {
+    11: "北京", 12: "天津", 13: "河北", 14: "山西", 15: "内蒙古", 21: "辽宁", 22: "吉林", 23: "黑龙江", 31: "上海", 32: "江苏", 33: "浙江", 34: "安徽", 35: "福建", 36: "江西", 37: "山东", 41: "河南", 42: "湖北", 43: "湖南", 44: "广东", 45: "广西", 46: "海南", 50: "重庆", 51: "四川", 52: "贵州", 53: "云南", 54: "西藏", 61: "陕西", 62: "甘肃", 63: "青海", 64: "宁夏", 65: "新疆", 71: "台湾", 81: "香港", 82: "澳门", 91: "国外"
+};
+var RandomLetter = {
+    letterNumber: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+    allLetter: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+    allNumber: "0123456789",
+    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    lowercase: "abcdefghijklmnopqrstuvwxyz", //  a-z
+};
 
 var CheckStringKey;
 (function (CheckStringKey) {
@@ -299,34 +276,96 @@ var OperationEnum;
     OperationEnum["sms"] = "sms";
     OperationEnum["mailto"] = "mailto";
 })(OperationEnum || (OperationEnum = {}));
+var RandomType;
+(function (RandomType) {
+    RandomType[RandomType["letterNumber"] = 1] = "letterNumber";
+    RandomType[RandomType["allLetter"] = 2] = "allLetter";
+    RandomType[RandomType["allNumber"] = 3] = "allNumber";
+    RandomType[RandomType["uppercase"] = 4] = "uppercase";
+    RandomType[RandomType["lowercase"] = 5] = "lowercase";
+})(RandomType || (RandomType = {}));
 
-var CheckStringReg = {
-    phone: /^1[3|4|5|6|7|8|9][0-9]{9}$/,
-    tel: /^(0\d{2,3}-\d{7,8})(-\d{1,4})?$/,
-    card: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
-    pwd: /^[a-zA-Z]\w{5,17}$/,
-    postal: /[1-9]\d{5}(?!\d)/,
-    QQ: /^[1-9][0-9]{4,9}$/,
-    email: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
-    money: /^\d*(?:\.\d{0,2})?$/,
-    URL: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/,
-    IP: /((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d))/,
-    number: /^[0-9]$/,
-    english: /^[a-zA-Z]+$/,
-    chinese: /^[\\u4E00-\\u9FA5]+$/,
-    lower: /^[a-z]+$/,
-    upper: /^[A-Z]+$/,
-    HTML: /<("[^"]*"|'[^']*'|[^'">])*>/ //HTML标记
-};
-var TrimReg = {
-    allSpace: /\s+/g,
-    prevNextSpace: /(^\s*)|(\s*$)/g,
-    prevSpace: /(^\s*)/g,
-    nextSpace: /(\s*$)/g //后空格
-};
-var aCity = {
-    11: "北京", 12: "天津", 13: "河北", 14: "山西", 15: "内蒙古", 21: "辽宁", 22: "吉林", 23: "黑龙江", 31: "上海", 32: "江苏", 33: "浙江", 34: "安徽", 35: "福建", 36: "江西", 37: "山东", 41: "河南", 42: "湖北", 43: "湖南", 44: "广东", 45: "广西", 46: "海南", 50: "重庆", 51: "四川", 52: "贵州", 53: "云南", 54: "西藏", 61: "陕西", 62: "甘肃", 63: "青海", 64: "宁夏", 65: "新疆", 71: "台湾", 81: "香港", 82: "澳门", 91: "国外"
-};
+var Random = /** @class */ (function () {
+    function Random() {
+    }
+    /**
+     * 基于URL生成UUID
+     * @returns {string} cd205467-0120-47b0-9444-894736d873c7
+     */
+    Random.prototype.genUUID = function () {
+        var url = URL.createObjectURL(new Blob([]));
+        // const uuid = url.split("/").pop();
+        var uuid = url.substring(url.lastIndexOf('/') + 1);
+        URL.revokeObjectURL(url);
+        return uuid;
+    };
+    /**
+     * 基于日期对象和random生成随机ID
+     * @returns {string}  1627635706897_652
+     */
+    Random.prototype.genRandomID = function () {
+        return new Date().getTime() + '_' + (Math.random() * 10000).toFixed(0);
+    };
+    /**
+   * 洗牌算法随机
+   * @param {Array} arr  需要打乱的数组
+   * @returns {Array}
+   */
+    Random.prototype.shuffleRandom = function (arr) {
+        var result = [], random;
+        while (arr.length > 0) {
+            random = Math.floor(Math.random() * arr.length);
+            result.push(arr[random]);
+            arr.splice(random, 1);
+        }
+        return result;
+    };
+    /**
+     * 在一个范围内生成随机数
+     * @param {number} min
+     * @param {number} max
+     * @param {number} exact  精确到几位小数
+     * @returns {number}
+     */
+    Random.prototype.creatRandom = function (min, max, exact) {
+        if (exact === void 0) { exact = 0; }
+        if (arguments.length === 0) {
+            return Math.random();
+        }
+        else if (arguments.length === 1) {
+            max = min;
+            min = 0;
+        }
+        var range = min + (Math.random() * (max - min));
+        return +(exact === void (0) ? Math.round(range) : range.toFixed(exact));
+    };
+    /**
+     * 生成随机数字+英文字母的字符串
+     * @param {number} min   必填。生成几位字符，
+     * @param {number} max   非必填。默认生成min位
+     * @param {RandomType} randomType  1:A-Z、a-z、0-9  2:A-Z、a-z  3:0-9  4:A-Z   5:a-z
+     * @returns {string}
+     */
+    Random.prototype.randomRange = function (min, max, randomType) {
+        if (randomType === void 0) { randomType = 1; }
+        var returnStr = "", range = (max ? Math.round(Math.random() * (max - min)) + min : min);
+        if (randomType !== undefined && RandomType.hasOwnProperty(randomType)) {
+            var charStr = RandomLetter[RandomType[randomType]];
+            for (var i = 0; i < range; i++) {
+                var index = Math.round(Math.random() * (charStr.length - 1));
+                returnStr += charStr.substring(index, index + 1);
+            }
+            return returnStr;
+        }
+        else {
+            throw ("[".concat(pkg.name, ".randomRange()]\n\u5165\u53C2[randomType]\u9519\u8BEF"));
+        }
+    };
+    return Random;
+}());
+function Random$1 (targetClass) {
+    return mixin(Random, targetClass);
+}
 
 var Character = /** @class */ (function () {
     function Character() {
@@ -1034,7 +1073,7 @@ var Observer = /** @class */ (function () {
         Observer.on(eventName, decor);
     };
     /**
-     * 卸载/取消 某一个回调监听(不是取消eventName的所有回调监听),主要配合once一起,实例单独调用,无意义
+     * 卸载/取消 某一个回调监听(不是取消eventName的所有回调监听)
      * @param eventName
      * @param callback
      */

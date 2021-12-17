@@ -155,6 +155,22 @@ searchValueInTree(Arr, "id", 99999, "children")	//false
 |                        | *max*   | 范围最大值 | *number* |   true   |   -    |        |
 |                        | *exact* |            | *number* |  false   |   0    |        |
 
+## randomRange
+
+| 方法用途                      | 参数         | 说明                                    | 类型                                                         | 是否必传 | 默认值 | 返回值 |
+| ----------------------------- | ------------ | :-------------------------------------- | :----------------------------------------------------------- | :------: | :----: | :----: |
+| 生成随机数字+英文字母的字符串 | *min*        | 生成长度为 ***min*** 的字符             | *number*                                                     |   true   |   -    | string |
+|                               | *max*        | 生成长度为 ***min*** - ***max*** 的字符 | *number*                                                     |  false   |   -    |        |
+|                               | *randomType* | 类型                                    | ***RandomType***<br>1      A-Z、a-z、0-9<br>2      A-Z、a-z<br>3      0-9<br>4      A-Z<br>5      a-z |  false   |   1    |        |
+```js
+tks.randomRange(6)	// IjvHko
+tks.randomRange(6, 10)	//SxNTod71uB
+tks.randomRange(6, 10)  //LYTSbP3
+tks.randomRange(6, 10)  //ZeE3F09K
+tks.randomRange(6, 6, 1)  //Mgy28A
+tks.randomRange(6, 6, 2)  //IcmCIW
+tks.randomRange(6, 6, 3)  //932731
+```
 
 
 # 字符串操作
@@ -344,6 +360,56 @@ setInterval(()=>{
 | 方法用途 | 参数      | 说明      | 类型               | 是否必传 | 默认值 | 返回值 |
 | -------- | --------- | :-------- | :----------------- | :------: | :----: | :----: |
 | 视频截图 | *videoEl* | video标签 | *HTMLVideoElement* |   true   |   -    | string |
+
+
+
+# 发布订阅模式
+
+## useObserver
+
+| 暴露的方法 | 方法用途                                                     | 入参                               | 参数类型                 | 参数说明                                         |
+| :--------- | ------------------------------------------------------------ | ---------------------------------- | ------------------------ | ------------------------------------------------ |
+| once       | 只订阅一次**主题**                                           | *eventName*<br>*callback*          | string<br>(res) => viod  | 事件名称<br>回调函数，接收emit的传参**payload**  |
+| on         | 订阅**主题**                                                 | *eventName*<br/>*callback*         | string<br/>(res) => viod | 事件名称<br/>回调函数，接收emit的传参**payload** |
+| off        | 某一个**观察者**取消订阅**主题**<br>（通过传入on的回调函数取消） | *eventName*<br/>*onMethodCallback* | string<br/>Function      | 事件名称<br/>on的回调函数                        |
+| emit       | **主题**发布，触发各**观察者**的回调                         | *eventName*<br>*payload*           | string<br>any            | 事件名称<br/>传递的参数                          |
+| remove     | 移除一个**主题**                                             | *eventName*                        | string                   | 事件名称                                         |
+
+```radio.js
+// 电台 （主题）
+const { once, on, off, emit, remove } = tks.useObserver();
+const musicList = ["七里香", "暧昧", "冠军", "小丑"];
+const timer = setInterval(() => {
+	let randomIdx = tks.creatRandom(0, 3)
+	emit("musicPlay", musicList[randomIdx])	//电台每2秒发布一次内容
+}, 2000)
+
+setTimeout(()=>{
+	remove("musicPlay")	//30秒后关闭电台。
+	clearInterval(timer)
+}, 30000)
+```
+```cloudMusic.js
+// 网易云音乐 （观察者）
+const { once, on, off, emit, remove } = tks.useObserver();
+const callBack = (res) => {
+	console.log("网易云音乐", res);
+}
+on("musicPlay", callBack);	//网易云订阅电台
+setTimeout(() => {
+	off("musicPlay", callBack)	//10秒后网易云取消订阅电台。但此时电台还在播报
+}, 10000)
+```
+
+
+```qqMusic.js
+// QQ音乐 （观察者）
+const { once, on, emit, remove } = tks.useObserver();
+const callBack = (res) => {
+	console.log("QQ音乐", res);
+}
+on("musicPlay", callBack)	//QQ音乐订阅电台
+```
 
 
 

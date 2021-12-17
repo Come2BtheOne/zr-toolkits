@@ -1,4 +1,7 @@
+import { RandomLetter } from '../config';
+import { RandomType } from '../types';
 import mixin from '../utils/mixin';
+import pkg from '../../package.json';
 
 class Random {
 
@@ -27,6 +30,7 @@ class Random {
     /**
    * 洗牌算法随机
    * @param {Array} arr  需要打乱的数组
+   * @returns {Array}
    */
     public shuffleRandom<T>(arr: Array<T>): Array<T> {
         let result: Array<any> = [], random;
@@ -44,6 +48,7 @@ class Random {
      * @param {number} min
      * @param {number} max
      * @param {number} exact  精确到几位小数
+     * @returns {number}
      */
     public creatRandom(min: number, max: number, exact: number = 0): number {
         if (arguments.length === 0) {
@@ -54,6 +59,28 @@ class Random {
         }
         const range = min + (Math.random() * (max - min));
         return +(exact === void (0) ? Math.round(range) : range.toFixed(exact));
+    }
+
+    /**
+     * 生成随机数字+英文字母的字符串
+     * @param {number} min   必填。生成几位字符，
+     * @param {number} max   非必填。默认生成min位
+     * @param {RandomType} randomType  1:A-Z、a-z、0-9  2:A-Z、a-z  3:0-9  4:A-Z   5:a-z
+     * @returns {string}
+     */
+    public randomRange(min: number, max?: number, randomType: RandomType = 1): string {
+        let returnStr = "",
+            range = (max ? Math.round(Math.random() * (max - min)) + min : min);
+        if (randomType !== undefined && RandomType.hasOwnProperty(randomType)) {
+            let charStr = RandomLetter[RandomType[randomType]];
+            for (let i = 0; i < range; i++) {
+                let index = Math.round(Math.random() * (charStr.length - 1));
+                returnStr += charStr.substring(index, index + 1);
+            }
+            return returnStr;
+        } else {
+            throw (`[${pkg.name}.randomRange()]\n入参[randomType]错误`);
+        }
     }
 
 }

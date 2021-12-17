@@ -44,7 +44,7 @@ export default class Observer {
         Observer.on(eventName, decor);
     }
     /**
-     * 卸载/取消 某一个回调监听(不是取消eventName的所有回调监听),主要配合once一起,实例单独调用,无意义
+     * 卸载/取消 某一个回调监听(不是取消eventName的所有回调监听)
      * @param eventName
      * @param callback
      */

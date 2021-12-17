@@ -1,3 +1,5 @@
+import Num from "./HOC/Num"
+
 export interface TimeDifference {
   day: string
   hour: string
@@ -61,4 +63,12 @@ export enum OperationEnum {
 export interface SendOptions {
   operation: OperationEnum
   receiver: string
+}
+
+export enum RandomType {
+  letterNumber = 1, //  A-Z、a-z、0-9
+  allLetter,  //  A-Z、a-z 
+  allNumber,  //  0-9
+  uppercase,  //  A-Z
+  lowercase,  //  a-z
 }

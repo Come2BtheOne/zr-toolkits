@@ -50,10 +50,13 @@
 	<script src='../dist/zr-toolkits.min.js'></script>
 
 	<script>
-		console.log("tks ===>", tks.prototype)
 		window.onload = () => {
-
+			
 		}
+		console.log("tks ===>", tks.prototype)
+		console.log(tks.randomRange(6, 6, 1));
+		console.log(tks.randomRange(6, 6, 2));
+		console.log(tks.randomRange(6, 6, 3));
 		const {isEmptyObject} = tks;
 		console.log(isEmptyObject({sd: 25}));
 
@@ -85,7 +88,10 @@
 			emit("musicPlay", musicList[randomIdx])
 		}, 2000)
 
-		setTimeout(()=>{clearInterval(timer)}, 30000)
+		setTimeout(()=>{
+			remove("musicPlay")
+			clearInterval(timer)
+		}, 30000)
 	</script>
 
 	<script type="module">
