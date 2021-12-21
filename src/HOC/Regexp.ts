@@ -43,11 +43,7 @@ class Regexp {
    */
   public regCheckString(str: string, key: CheckStringKey): boolean {
     if (key !== undefined && CheckStringReg.hasOwnProperty(key)) {
-      for (let k in CheckStringReg) {
-        if (k === key) {
-          return CheckStringReg[k].test(str);
-        }
-      }
+      return CheckStringReg[key].test(str);
     } else {
       throw (`[${pkg.name}.regCheckString()]\n入参[key]错误`);
     }

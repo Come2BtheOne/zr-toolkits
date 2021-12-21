@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v2.1.3
+ * zr-toolkits v2.1.4
  * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -34,7 +34,7 @@
     }
 
     var name = "zr-toolkits";
-    var version = "2.1.3";
+    var version = "2.1.4";
     var description = "切图仔巨献";
     var main = "dist/zr-toolkits.js";
     var unpkg = "dist/zr-toolkits.min.js";
@@ -242,25 +242,6 @@
         lowercase: "abcdefghijklmnopqrstuvwxyz", //  a-z
     };
 
-    var CheckStringKey;
-    (function (CheckStringKey) {
-        CheckStringKey["phone"] = "phone";
-        CheckStringKey["tel"] = "tel";
-        CheckStringKey["card"] = "card";
-        CheckStringKey["pwd"] = "pwd";
-        CheckStringKey["postal"] = "postal";
-        CheckStringKey["QQ"] = "QQ";
-        CheckStringKey["email"] = "email";
-        CheckStringKey["money"] = "money";
-        CheckStringKey["URL"] = "URL";
-        CheckStringKey["IP"] = "IP";
-        CheckStringKey["number"] = "number";
-        CheckStringKey["english"] = "english";
-        CheckStringKey["chinese"] = "chinese";
-        CheckStringKey["lower"] = "lower";
-        CheckStringKey["upper"] = "upper";
-        CheckStringKey["HTML"] = "HTML"; //HTML标记
-    })(CheckStringKey || (CheckStringKey = {}));
     var TrimType;
     (function (TrimType) {
         TrimType[TrimType["allSpace"] = 1] = "allSpace";
@@ -487,11 +468,7 @@
          */
         Regexp.prototype.regCheckString = function (str, key) {
             if (key !== undefined && CheckStringReg.hasOwnProperty(key)) {
-                for (var k in CheckStringReg) {
-                    if (k === key) {
-                        return CheckStringReg[k].test(str);
-                    }
-                }
+                return CheckStringReg[key].test(str);
             }
             else {
                 throw ("[".concat(pkg.name, ".regCheckString()]\n\u5165\u53C2[key]\u9519\u8BEF"));
