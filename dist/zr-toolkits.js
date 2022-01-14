@@ -1,6 +1,6 @@
 /**
  * zr-toolkits v2.1.4
- * (c) 2021-2021 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
+ * (c) 2021-2022 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
  */
@@ -1022,11 +1022,7 @@
          */
         Observer.emit = function (eventName, payload) {
             var callbackList = Observer.Events[eventName] || [];
-            // 如果用js写，遍历的时候要做一下判断是否是函数，ts 用类型约束，在调用或者编译阶段会检测是否合法
-            // callbackList.map(fn=>{
-            //     if(typeof fn==="function") fn.apply(this,args)
-            // })
-            callbackList.forEach(function (fn) { return fn(payload); });
+            callbackList.forEach(function (subscribe) { return subscribe.callback(payload); });
         };
         /**
          * 订阅/监听
@@ -1034,10 +1030,35 @@
          * @param callback
          */
         Observer.on = function (eventName, callback) {
-            // if(!eventName||typeof eventName !=="string") return  ；// 因为用了ts 写，所以这句不用写了，如果是js写，建议加这判断
-            var callbackList = Observer.Events[eventName] || [];
-            callback && callbackList.push(callback);
-            Observer.Events[eventName] = callbackList;
+            if (eventName === void 0) { eventName = ""; }
+            var subscribe = {
+                key: "",
+                callback: callback
+            };
+            var subscribeKey = "";
+            var eventArr = eventName.split('/');
+            var _eventName = "";
+            if (!eventName) {
+                console.warn("[useObserver][on]\n<eventName>不能为空");
+                return;
+            }
+            else if (eventArr.length === 2) {
+                //todo 去重
+                subscribeKey = eventArr[1];
+                subscribe.key = subscribeKey;
+                _eventName = eventArr[0];
+            }
+            else if (eventArr.length === 1) {
+                subscribeKey = new Random().genRandomID();
+                subscribe.key = subscribeKey;
+                _eventName = eventArr[0];
+            }
+            var callbackList = Observer.Events[_eventName] || [];
+            callback && callbackList.push(subscribe);
+            Observer.Events[_eventName] = callbackList;
+            return function () {
+                Observer.off(_eventName, subscribeKey);
+            };
         };
         /**
          * 只订阅一次/监听一次：
@@ -1048,22 +1069,31 @@
          * @param callback
          */
         Observer.once = function (eventName, callback) {
-            // if(!eventName||typeof eventName !=="string") return ；
+            var subscribeKey = new Random().genRandomID();
             var decor = function (payload) {
                 callback && callback(payload);
-                Observer.off(eventName, decor);
+                Observer.off(eventName, subscribeKey);
             };
-            Observer.on(eventName, decor);
+            Observer.on(eventName + "/" + subscribeKey, decor);
         };
         /**
          * 卸载/取消 某一个回调监听(不是取消eventName的所有回调监听)
          * @param eventName
          * @param callback
          */
-        Observer.off = function (eventName, callback) {
-            var callbackList = Observer.Events[eventName] || [];
-            var resCallbacks = callbackList.filter(function (fn) { return fn !== callback; });
-            Observer.Events[eventName] = resCallbacks;
+        Observer.off = function (eventName, subscribeKey) {
+            var eventArr = eventName.split('/');
+            var _eventName = "";
+            if (eventArr.length === 2) {
+                _eventName = eventArr[0];
+                subscribeKey = eventArr[1];
+            }
+            else if (eventArr.length === 1) {
+                _eventName = eventName;
+            }
+            var callbackList = Observer.Events[_eventName] || [];
+            var resCallbacks = callbackList.filter(function (subscribe) { return subscribe.key !== subscribeKey; });
+            Observer.Events[_eventName] = resCallbacks;
         };
         /**
          * 卸载/取消 指定eventName 的所有订阅/监听
@@ -1074,7 +1104,7 @@
             Observer.Events[eventName] = [];
             callback && callback();
         };
-        Observer.Events = {}; //约束示例:{"eventName":[function(){},function(){},.....],......}
+        Observer.Events = {};
         return Observer;
     }());
 

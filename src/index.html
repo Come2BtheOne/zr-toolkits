@@ -89,28 +89,33 @@
 			emit("musicPlay", musicList[randomIdx])
 		}, 2000)
 
-		setTimeout(()=>{
-			remove("musicPlay")
-			clearInterval(timer)
-		}, 30000)
-	</script>
-
-	<script type="module">
-		const { once, on, off, emit, remove } = tks.useObserver();
-		const callBack = (res) => {
-			console.log("网易云音乐", res)
-		}
-		on("musicPlay", callBack)
-		setTimeout(() => {
-			off("musicPlay", callBack)
-		}, 10000)
+		// setTimeout(()=>{
+		// 	remove("musicPlay")
+		// 	clearInterval(timer)
+		// }, 30000)
 	</script>
 
 	<script type="module">
 		const { once, on, emit, remove } = tks.useObserver();
-		on("musicPlay", (res) => {
+		const callBack = (res) => {
+			
+		}
+		const offSub = on("musicPlay", (res) => {
+			console.log("网易云音乐", res)
+		})
+		setTimeout(() => {
+			offSub();
+		}, 10000)
+	</script>
+
+	<script type="module">
+		const { once, on, emit, remove, off } = tks.useObserver();
+		on("musicPlay/myQQ", (res) => {
 			console.log("QQ音乐", res);
 		})
+		setTimeout(()=> {
+			off("musicPlay/myQQ");
+		}, 15000)
 	</script>
 
 	<script>

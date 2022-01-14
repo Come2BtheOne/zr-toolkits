@@ -3,7 +3,7 @@ import { RandomType } from '../types';
 import mixin from '../utils/mixin';
 import pkg from '../../package.json';
 
-class Random {
+export class Random {
 
     /**
      * 基于URL生成UUID
