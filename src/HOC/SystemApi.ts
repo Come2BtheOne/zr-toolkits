@@ -1,7 +1,7 @@
 import { NavigatorWithShare, OperationEnum, SendOptions, ShareOptions } from '../types';
 import mixin from '../utils/mixin';
 
-class SystemApi {
+export class SystemApi {
 
   /**
    * 唤起系统打电话功能

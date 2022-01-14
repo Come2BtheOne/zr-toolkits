@@ -1,4 +1,5 @@
 import { Random } from './Random';
+import pkg from '../../package.json';
 
 type Subscribe = {
     key: string
@@ -8,6 +9,7 @@ interface Events {
     [key: string]: Array<Subscribe>
 }
 export default class Observer {
+
     static Events: Events = {}
     /**
      * 发布/ 触发
@@ -26,19 +28,23 @@ export default class Observer {
     static on(eventName: string = "", callback: (payload?: any) => void) {
         let subscribe: Subscribe = {
             key: "",
-            callback: callback
+            callback
         }
         let subscribeKey = "";
         const eventArr = eventName.split('/');
         let _eventName = "";
         if (!eventName) {
-            console.warn("[useObserver][on]\n<eventName>不能为空");
+            console.error(`[${pkg.name}][useObserver][on]\n<eventName>不能为空`);
             return;
         } else if (eventArr.length === 2) {
-            //todo 去重
+            //判断事件是否已存在
+            if (Observer.duplicateRemoval(eventName)) {
+                console.warn(`[${pkg.name}][useObserver][on]\n <${eventName}>已存在,请勿重复添加~`);
+                return;
+            }
+            _eventName = eventArr[0];
             subscribeKey = eventArr[1];
             subscribe.key = subscribeKey;
-            _eventName = eventArr[0];
         } else if (eventArr.length === 1) {
             subscribeKey = new Random().genRandomID();
             subscribe.key = subscribeKey;
@@ -48,7 +54,7 @@ export default class Observer {
         callback && callbackList.push(subscribe);
         Observer.Events[_eventName] = callbackList;
 
-        return function() {
+        return function () {
             Observer.off(_eventName, subscribeKey);
         }
     }
@@ -66,7 +72,7 @@ export default class Observer {
             callback && callback(payload);
             Observer.off(eventName, subscribeKey);
         }
-        Observer.on(eventName+"/"+subscribeKey, decor);
+        Observer.on(eventName + "/" + subscribeKey, decor);
     }
     /**
      * 卸载/取消 某一个回调监听(不是取消eventName的所有回调监听)
@@ -76,7 +82,7 @@ export default class Observer {
     static off(eventName: string, subscribeKey?: string) {
         const eventArr = eventName.split('/');
         let _eventName = "";
-        if(eventArr.length === 2) {
+        if (eventArr.length === 2) {
             _eventName = eventArr[0];
             subscribeKey = eventArr[1];
         } else if (eventArr.length === 1) {
@@ -94,5 +100,17 @@ export default class Observer {
     static remove(eventName: string, callback?: Function) {
         Observer.Events[eventName] = [];
         callback && callback();
+    }
+
+    /**
+     * 判断事件是否已存在
+     */
+    static duplicateRemoval(eventName: string) {
+        const eventArr = eventName.split('/');
+        const eventList = Observer.Events[eventArr[0]];
+        if (eventList && eventList.length && eventList.length > 0) {
+            return eventList.find((subscribe: Subscribe) => subscribe.key === eventArr[1]);
+        }
+        return false;
     }
 }

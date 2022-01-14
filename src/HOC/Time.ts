@@ -1,7 +1,7 @@
 import { TimeDifference } from '../types';
 import mixin from '../utils/mixin';
 
-class Time {
+export class Time {
 
   /**
    * 将时间戳转换成  2021/11/30 14:10:09

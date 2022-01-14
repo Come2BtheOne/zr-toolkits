@@ -1,6 +1,6 @@
 import mixin from '../utils/mixin';
 
-class Other {
+export class Other {
 
   /**
    * 异步加载script标签

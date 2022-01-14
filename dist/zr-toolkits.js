@@ -1,5 +1,5 @@
 /**
- * zr-toolkits v2.1.4
+ * zr-toolkits v2.1.5
  * (c) 2021-2022 Come2BtheOne https://github.com/Come2BtheOne/zr-toolkits
  * Licensed under MIT
  * Released on: nov 30, 2021
@@ -34,7 +34,7 @@
     }
 
     var name = "zr-toolkits";
-    var version = "2.1.4";
+    var version = "2.1.5";
     var description = "切图仔巨献";
     var main = "dist/zr-toolkits.js";
     var unpkg = "dist/zr-toolkits.min.js";
@@ -1039,14 +1039,18 @@
             var eventArr = eventName.split('/');
             var _eventName = "";
             if (!eventName) {
-                console.warn("[useObserver][on]\n<eventName>不能为空");
+                console.error("[".concat(pkg.name, "][useObserver][on]\n<eventName>\u4E0D\u80FD\u4E3A\u7A7A"));
                 return;
             }
             else if (eventArr.length === 2) {
-                //todo 去重
+                //判断事件是否已存在
+                if (Observer.duplicateRemoval(eventName)) {
+                    console.warn("[".concat(pkg.name, "][useObserver][on]\n <").concat(eventName, ">\u5DF2\u5B58\u5728,\u8BF7\u52FF\u91CD\u590D\u6DFB\u52A0~"));
+                    return;
+                }
+                _eventName = eventArr[0];
                 subscribeKey = eventArr[1];
                 subscribe.key = subscribeKey;
-                _eventName = eventArr[0];
             }
             else if (eventArr.length === 1) {
                 subscribeKey = new Random().genRandomID();
@@ -1103,6 +1107,17 @@
         Observer.remove = function (eventName, callback) {
             Observer.Events[eventName] = [];
             callback && callback();
+        };
+        /**
+         * 判断事件是否已存在
+         */
+        Observer.duplicateRemoval = function (eventName) {
+            var eventArr = eventName.split('/');
+            var eventList = Observer.Events[eventArr[0]];
+            if (eventList && eventList.length && eventList.length > 0) {
+                return eventList.find(function (subscribe) { return subscribe.key === eventArr[1]; });
+            }
+            return false;
         };
         Observer.Events = {};
         return Observer;

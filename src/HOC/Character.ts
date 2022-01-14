@@ -3,7 +3,7 @@ import { TrimReg } from '../config';
 import mixin from '../utils/mixin';
 import pkg from '../../package.json';
 
-class Character {
+export class Character {
     /**
      * 获取url字符串上的参数
      * @param {string} url  链接

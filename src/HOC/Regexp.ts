@@ -3,7 +3,7 @@ import { aCity, CheckStringReg } from '../config';
 import mixin from '../utils/mixin';
 import pkg from '../../package.json';
 
-class Regexp {
+export class Regexp {
 
   /**
    * 校验邮箱格式

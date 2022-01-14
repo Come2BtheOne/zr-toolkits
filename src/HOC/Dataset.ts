@@ -1,7 +1,7 @@
 import mixin from '../utils/mixin';
 import pkg from '../../package.json';
 
-class Dataset {
+export class Dataset {
 
     /**
      * 判断一个字符串是否为空

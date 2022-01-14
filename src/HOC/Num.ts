@@ -1,6 +1,6 @@
 import mixin from '../utils/mixin';
 
-class Num {
+export class Num {
 
   /**
    * 格式化金额格式  152,552.25
@@ -9,7 +9,7 @@ class Num {
    */
   public formatMoney(num: number | string, precision: number = 2) {
     const _num = +num;
-    return _num.toLocaleString('zh', { minimumIntegerDigits: 1,minimumFractionDigits: precision, maximumFractionDigits: 0 });
+    return _num.toLocaleString('zh', { minimumIntegerDigits: 1, minimumFractionDigits: precision, maximumFractionDigits: 0 });
   };
 
   /**
@@ -19,7 +19,7 @@ class Num {
    */
   public makePercent(num: number | string, precision: number = 2) {
     const _num = +num;
-    return _num.toLocaleString('zh', { style: 'percent',maximumFractionDigits: precision });
+    return _num.toLocaleString('zh', { style: 'percent', maximumFractionDigits: precision });
   }
 
   /**
@@ -29,11 +29,11 @@ class Num {
    * @return {number}
    */
   public plus(num1: number, num2: number): number {
-    let r1:number = 0, r2:number = 0, m:number = 0
-    try{r1=num1.toString().split(".")[1].length}catch(e){r1=0}
-    try{r2=num2.toString().split(".")[1].length}catch(e){r2=0}
-    m=Math.pow(10,Math.max(r1,r2))
-    return (num1*m+num2*m)/m
+    let r1: number = 0, r2: number = 0, m: number = 0
+    try { r1 = num1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+    try { r2 = num2.toString().split(".")[1].length } catch (e) { r2 = 0 }
+    m = Math.pow(10, Math.max(r1, r2))
+    return (num1 * m + num2 * m) / m
   }
 
   /**
@@ -43,11 +43,11 @@ class Num {
    * @return {number}
    */
   public minus(num1: number, num2: number): number {
-    let r1:number = 0, r2:number = 0, m:number = 0
-    try{r1=num1.toString().split(".")[1].length}catch(e){r1=0}
-    try{r2=num2.toString().split(".")[1].length}catch(e){r2=0}
-    m=Math.pow(10,Math.max(r1,r2))
-    return (num1*m+num2*m)/m
+    let r1: number = 0, r2: number = 0, m: number = 0
+    try { r1 = num1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+    try { r2 = num2.toString().split(".")[1].length } catch (e) { r2 = 0 }
+    m = Math.pow(10, Math.max(r1, r2))
+    return (num1 * m + num2 * m) / m
   }
 
   /**
@@ -57,10 +57,10 @@ class Num {
    * @return {number}
    */
   public times(num1: number, num2: number): number {
-    let m:number = 0, s1:string = num1.toString(), s2:string = num2.toString();
-    try{m+=s1.split(".")[1].length}catch(e){}
-    try{m+=s2.split(".")[1].length}catch(e){}
-    return (+s1.replace(".",""))*(+s2.replace(".",""))/Math.pow(10,m)
+    let m: number = 0, s1: string = num1.toString(), s2: string = num2.toString();
+    try { m += s1.split(".")[1].length } catch (e) { }
+    try { m += s2.split(".")[1].length } catch (e) { }
+    return (+s1.replace(".", "")) * (+s2.replace(".", "")) / Math.pow(10, m)
   }
 
   /**
@@ -70,12 +70,12 @@ class Num {
    * @return {number}
    */
   public divide(num1: number, num2: number): number {
-    let r1:number = 0,r2:number = 0,m:number = 0,n:number = 0;
-    try{r1=num1.toString().split(".")[1].length}catch(e){r1=0}
-    try{r2=num2.toString().split(".")[1].length}catch(e){r2=0}
-    m=Math.pow(10,Math.max(r1,r2));
-    n=(r1>=r2)?r1:r2;
-    return +((num1*m-num2*m)/m).toFixed(n);
+    let r1: number = 0, r2: number = 0, m: number = 0, n: number = 0;
+    try { r1 = num1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+    try { r2 = num2.toString().split(".")[1].length } catch (e) { r2 = 0 }
+    m = Math.pow(10, Math.max(r1, r2));
+    n = (r1 >= r2) ? r1 : r2;
+    return +((num1 * m - num2 * m) / m).toFixed(n);
   }
 
 
